@@ -90,6 +90,7 @@ rule
          {nw}end{nw}                { [:END, text] }
          {nw}eval{nw}               { [:EVAL, text] }
          {nw}for{nw}                { [:FOR, text] }
+         {nw}group{nw}              { [:GROUP, text] }
          {nw}if{nw}                 { [:IF, text] }
          {nw}indirect{nw}           { [:INDIRECT, text] }
          {nw}in{nw}                 { [:IN, text] }

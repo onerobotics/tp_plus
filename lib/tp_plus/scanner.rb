@@ -219,6 +219,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\bfor\b/i))
          action { [:FOR, text] }
 
+      when (text = @ss.scan(/\bgroup\b/i))
+         action { [:GROUP, text] }
+
       when (text = @ss.scan(/\bif\b/i))
          action { [:IF, text] }
 

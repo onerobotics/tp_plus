@@ -17,6 +17,13 @@ module TPPlus
         @comment = ""
       end
 
+      def groups(context)
+        @value = context
+        return "" unless context.is_a? DigitNode
+
+        "GP#{@value.eval(context).to_i}:"
+      end
+
       def comment_string
         return "" if @comment == ""
 
@@ -39,9 +46,10 @@ module TPPlus
 
       def eval(context,options={})
         options[:method] ||= ""
+        options[:group] ||= ""
         raise "Invalid component" unless component_valid?(options[:method])
 
-        "PR[#{@id}#{component(options[:method])}#{comment_string}]"
+        "PR[#{groups(options[:group])}#{@id}#{component(options[:method])}#{comment_string}]"
       end
     end
   end

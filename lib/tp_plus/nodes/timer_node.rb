@@ -14,7 +14,7 @@ module TPPlus
       end
 
       def eval(context, options={})
-        "TIMER[#{@id}#{comment_string}]"
+        "TIMER[#{@id}]"
       end
     end
   end
