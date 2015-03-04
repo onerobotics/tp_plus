@@ -1165,4 +1165,63 @@ P[2:"test2"]{
     parse %(abort)
     assert_prog "ABORT ;\n"
   end
+
+  def test_if_statement_multiple_arguments
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>1 || R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_simple_linear_motion
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_pr_components_groups
+    parse("foo := PR[1]\nfoo.group(1).y=5\n")
+    assert_prog "PR[GP1:1,2:foo]=5 ;\n"
+  end
+
+    def test_position_data_populates_interpreter_position_data
+    parse %(position_data
+{
+  'positions' : [
+    {
+      'id' : 1,
+      'mask' :  [{
+        'group' : 1,
+        'uframe' : 5,
+        'utool' : 2,
+        'config' : {
+            'flip' : false,
+            'up'   : true,
+            'top'  : true,
+            'turn_counts' : [0,0,0]
+            },
+        'components' : {
+            'x' : -.590,
+            'y' : -29.400,
+            'z' : 1304.471,
+            'w' : 78.512,
+            'p' : 89.786,
+            'r' : -11.595
+            }
+        },
+        {
+        'group' : 2,
+        'uframe' : 5,
+        'utool' : 2,
+        'components' : {
+            'J1' : 0.00
+            }
+        }]
+    }
+  ]
+}
+end)
+    assert_prog ""
+    #output = @interpreter.pos_section
+    #output = output
+    assert_equal 1, @interpreter.position_data[:positions].length
+  end
+
 end
