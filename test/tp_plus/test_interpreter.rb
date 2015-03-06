@@ -588,6 +588,16 @@ LBL[101:ghjk] ;\n)
     assert_prog "IF (!F[1:foo]),JMP LBL[100] ;\n! foo is true ;\nLBL[100] ;\n"
   end
 
+  def test_opposite_with_boolean_and
+    parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nif foo && bar && baz\n#foo, bar and baz are true\nend"
+    assert_prog "IF (!F[1:foo] OR !F[2:bar] OR !F[3:baz]),JMP LBL[100] ;\n! foo, bar and baz are true ;\nLBL[100] ;\n"
+  end
+
+  def test_opposite_with_boolean_or
+    parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nif foo || bar || baz\n#foo or bar or baz is true\nend"
+    assert_prog "IF (!F[1:foo] AND !F[2:bar] AND !F[3:baz]),JMP LBL[100] ;\n! foo or bar or baz is true ;\nLBL[100] ;\n"
+  end
+
   def test_opposite_flag_in_simple_unless
     parse "foo := F[1]\nunless foo\n# foo is false\nend"
     assert_prog "IF (F[1:foo]),JMP LBL[100] ;\n! foo is false ;\nLBL[100] ;\n"
@@ -925,10 +935,11 @@ end)
 
     assert_prog ""
     assert_equal %(P[1:"test"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };\n), @interpreter.pos_section
   end
 
@@ -984,16 +995,18 @@ end)
 
     assert_prog ""
     assert_equal %(P[1:"test"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };
 P[2:"test2"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };\n), @interpreter.pos_section
   end
 
@@ -1166,22 +1179,7 @@ P[2:"test2"]{
     assert_prog "ABORT ;\n"
   end
 
-  def test_if_statement_multiple_arguments
-    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\nfoo = 1\nfoo2 = 2\nend")
-    assert_prog "IF (R[1:foo]<>1 || R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
-  end
-
-  def test_simple_linear_motion
-    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
-    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
-  end
-
-  def test_pr_components_groups
-    parse("foo := PR[1]\nfoo.group(1).y=5\n")
-    assert_prog "PR[GP1:1,2:foo]=5 ;\n"
-  end
-
-    def test_position_data_populates_interpreter_position_data
+  def test_position_data_populates_interpreter_position_data
     parse %(position_data
 {
   'positions' : [
@@ -1224,4 +1222,24 @@ end)
     assert_equal 1, @interpreter.position_data[:positions].length
   end
 
+  def test_simple_linear_motion
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_pr_components_groups
+    parse("foo := PR[1]\nfoo.group(1).y=5\n")
+    assert_prog "PR[GP1:1,2:foo]=5 ;\n"
+  end
+
+  def test_if_statement_multiple_arguments
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\n
+foo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>1 OR R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_div_statement
+    parse("foo := R[1]\nfoo2 := R[2]\nfoo2 = foo DIV 2")
+    assert_prog "R[2:foo2]=R[1:foo] DIV 2 ;\n"
+  end
 end
