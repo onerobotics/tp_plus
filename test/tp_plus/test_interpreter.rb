@@ -790,22 +790,22 @@ Foo::Bar::baz = 2)
 
   def test_timer_start
     parse "foo := TIMER[1]\nstart foo"
-    assert_prog "TIMER[1:foo]=START ;\n"
+    assert_prog "TIMER[1]=START ;\n"
   end
 
   def test_timer_reset
     parse "foo := TIMER[1]\nreset foo"
-    assert_prog "TIMER[1:foo]=RESET ;\n"
+    assert_prog "TIMER[1]=RESET ;\n"
   end
 
   def test_timer_stop
     parse "foo := TIMER[1]\nstop foo"
-    assert_prog "TIMER[1:foo]=STOP ;\n"
+    assert_prog "TIMER[1]=STOP ;\n"
   end
 
   def test_timer_restart
     parse "foo := TIMER[1]\nrestart foo"
-    assert_prog "TIMER[1:foo]=STOP ;\nTIMER[1:foo]=RESET ;\nTIMER[1:foo]=START ;\n"
+    assert_prog "TIMER[1]=STOP ;\nTIMER[1]=RESET ;\nTIMER[1]=START ;\n"
   end
 
   def test_indirect_timer
@@ -1242,4 +1242,10 @@ foo = 1\nfoo2 = 2\nend")
     parse("foo := R[1]\nfoo2 := R[2]\nfoo2 = foo DIV 2")
     assert_prog "R[2:foo2]=R[1:foo] DIV 2 ;\n"
   end
+
+  def test_conditional_equals
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
 end
+
