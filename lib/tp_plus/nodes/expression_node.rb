@@ -51,7 +51,7 @@ module TPPlus
 	          o = { opposite: true }
             "#{@left_op.eval(context,o)}#{@op.eval(context,options)}#{@right_op.eval(context,o)}"
           else
-            if options[:opposite] && options[:type] == "if"
+            if options[:opposite] && options[:type] == "if" && @right_op.kind_of?(ExpressionNode)
               o = { opposite: true, type: "if"}
             else
               o = {}
