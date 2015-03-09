@@ -44,6 +44,8 @@ module TPPlus
         "when" => :WHEN,
         "while" => :WHILE,
 
+        "DIV" => :DIV,
+
         "true" => :TRUE_FALSE,
         "false" => :TRUE_FALSE,
 
@@ -52,8 +54,7 @@ module TPPlus
         "TP_GROUPMASK" => :TP_HEADER,
         "TP_SUBTYPE" => :TP_HEADER,
 
-        "set_uframe" => :FANUC_SET,
-        "set_skip_condition" => :FANUC_SET,
+        "set_skip_condition" => :SET_SKIP_CONDITION,
         "use_payload" => :FANUC_USE,
         "use_uframe" => :FANUC_USE,
         "use_utool" => :FANUC_USE

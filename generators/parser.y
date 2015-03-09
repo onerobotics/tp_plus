@@ -8,7 +8,7 @@ token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
-token FANUC_USE FANUC_SET NAMESPACE
+token FANUC_USE SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
@@ -17,16 +17,14 @@ token LABEL
 token false
 
 prechigh
-#  left DOT
   right BANG
-  left STAR SLASH
+  left STAR SLASH DIV MOD
   left PLUS MINUS
   left GT GTE LT LTE
   left EEQUAL NOTEQUAL
   left AND
   left OR
   right EQUAL
-#  left DOT
 preclow
 
 rule
@@ -48,18 +46,8 @@ rule
                                         }
     ;
 
-  #statements
-  #  : statement terminator             { result = val }
-  #  | statements terminator statement  { result = val[0] << val[1] << val[2] }
-  #    # to ignore trailing line breaks
-  #  | statements terminator            { result = val[0] << val[1] }
-  #  # this adds a couple conflicts
-  #  | terminator statements            { result = [val[0]] << val[1] }
-  #  | terminator                       { result = [val[0]] }
-  #  ;
-
   block
-    : optional_newline statements      { result = val[1] }
+    : NEWLINE statements      { result = val[1] }
     ;
 
   optional_newline
@@ -82,7 +70,7 @@ rule
     | while_loop
     #| program_call
     | use_statement
-    | set_statement
+    | set_skip_statement
     | wait_statement
     | case_statement
     | fanuc_eval
@@ -123,21 +111,27 @@ rule
   wait_statement
     : WAIT_FOR LPAREN indirectable COMMA STRING RPAREN
                                        { result = WaitForNode.new(val[2], val[4]) }
-    | WAIT_UNTIL LPAREN expression RPAREN wait_modifiers
-                                       { result = WaitUntilNode.new(val[2],val[4]) }
-    ;
-
-  wait_modifiers
-    :
-    | wait_modifier                    { result = val[0] }
-    | wait_modifiers wait_modifier     { result = val[0].merge(val[1]) }
+    | WAIT_UNTIL LPAREN expression RPAREN
+                                       { result = WaitUntilNode.new(val[2], nil) }
+    | WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier
+                                       { result = WaitUntilNode.new(val[2],val[5]) }
+    | WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier DOT wait_modifier
+                                       { result = WaitUntilNode.new(val[2],val[5].merge(val[7])) }
     ;
 
   wait_modifier
-    : DOT swallow_newlines TIMEOUT LPAREN label RPAREN
-                                       { result = { label: val[4] } }
-    | DOT swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN
-                                       { result = { timeout: [val[4],val[6]] } }
+    : timeout_modifier
+    | after_modifier
+    ;
+
+  timeout_modifier
+    : swallow_newlines TIMEOUT LPAREN label RPAREN
+                                       { result = { label: val[3] } }
+    ;
+
+  after_modifier
+    : swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN
+                                       { result = { timeout: [val[3],val[5]] } }
     ;
 
   label
@@ -148,11 +142,9 @@ rule
     : FANUC_USE indirectable           { result = UseNode.new(val[0],val[1]) }
     ;
 
-  set_statement
-    : FANUC_SET indirectable COMMA var
-                                       { result = SetNode.new(val[0],val[1],val[3]) }
-    # this introduces 2 conflicts somehow
-    | FANUC_SET expression             { result = SetNode.new(val[0],nil,val[1]) }
+  # set_skip_condition x
+  set_skip_statement
+    : SET_SKIP_CONDITION expression             { result = SetSkipNode.new(val[1]) }
     ;
 
   program_call
@@ -254,9 +246,9 @@ rule
     ;
 
   inline_conditional
-    : inlineable IF expression { result = InlineConditionalNode.new("if",val[2],val[0]) }
-    | inlineable UNLESS expression { result = InlineConditionalNode.new("unless",val[2],val[0]) }
-    | inlineable
+    : inlineable
+    | inlineable IF expression     { result = InlineConditionalNode.new(val[1], val[2], val[0]) }
+    | inlineable UNLESS expression { result = InlineConditionalNode.new(val[1], val[2], val[0]) }
     ;
 
   inlineable
@@ -295,13 +287,12 @@ rule
                                        { result = SkipNode.new(val[4],val[5]) }
     ;
 
-valid_terminations
+  valid_terminations
     : integer
     | var
     | MINUS DIGIT                      {
                                          raise Racc::ParseError, sprintf("\ninvalid termination type: (%s)", val[1]) if val[1] != 1
                                          result = DigitNode.new(val[1].to_i * -1)
-
                                        }
     ;
 
@@ -356,7 +347,7 @@ valid_terminations
      : WORD                             { result = VarNode.new(val[0]) }
      | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[1]) }
      # introduces 2 reduce/reduce conflicts and 1 useless rule
-     | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
+     | namespaces var           { result = NamespacedVarNode.new(val[0],val[1]) }
      ;
 
   var_method_modifiers
@@ -371,63 +362,27 @@ valid_terminations
         ;
 
   namespaces
-    : namespace                        { result = val }
-    | namespaces COLON COLON namespace     { result = val[0] << val[3] }
+    : WORD COLON COLON                     { result = val }
     ;
 
-  namespace
-    : WORD                             { result = val[0] }
-    ;
 
-  # this change goes from 6 shift/reduce conflicts to 20
   expression
     : factor                           { result = val[0] }
-    | operator                         { result = val[0] }
-    | LPAREN expression RPAREN         { result = ParenExpressionNode.new(val[1]) }
+    | BANG factor                      { result = ExpressionNode.new(val[1], "!", nil) }
+    | expression operator expression   { result = ExpressionNode.new(val[0], val[1], val[2]) }
     ;
 
-  #expression
-  #  : simple_expression                         { result = val[0] }
-  #  | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  | LPAREN expression RPAREN                        { result = val[1] }
-  #  ;
-
-  #simple_expression
-  #  : term                                      { result = val[0] }
-  #  | simple_expression addop term              { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  ;
-
-  #term
-  #  : factor
-  #  | term mulop factor                         { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  ;
-
-  # 20 to 48 conflicts!!
   operator
-    : expression relop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    # 48 => 50 with prec on BANG (62) without
-    | BANG expression                  { result = ExpressionNode.new(val[1],"!",nil) }
-    ;
-
-  relop
     : EEQUAL { result = "==" }
     | NOTEQUAL { result = "<>" }
     | LT { result = "<" }
     | GT { result = ">" }
     | GTE { result = ">=" }
     | LTE { result = "<=" }
-    ;
-
-  addop
-    : PLUS { result = "+" }
+    | PLUS { result = "+" }
     | MINUS { result = "-" }
     | OR { result = "||" }
-    ;
-
-  mulop
-    : STAR { result = "*" }
+    | STAR { result = "*" }
     | SLASH { result = "/" }
     | DIV { result = "DIV" }
     | MOD { result = "%" }
@@ -435,9 +390,15 @@ valid_terminations
     ;
 
   factor
-    : signed_number
+    : number
+    | signed_number
     | var
     | indirect_thing
+    | paren_expr
+    ;
+
+  paren_expr
+    : LPAREN expression RPAREN        { result = ParenExpressionNode.new(val[1]) }
     ;
 
   indirect_thing
@@ -455,7 +416,6 @@ valid_terminations
 
   sign
     : MINUS { result = "-" }
-    |
     ;
 
   number
@@ -475,6 +435,7 @@ valid_terminations
     | position
     | vreg
     | number
+    | signed_number
     | argument
     | timer
     | ualm
@@ -567,9 +528,14 @@ valid_terminations
     : STRING
     | hash
     | array
-    | sign DIGIT                       { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
-    | sign REAL                        { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
+    | optional_sign DIGIT              { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
+    | optional_sign REAL               { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
     | TRUE_FALSE                       { result = val[0] == "true" }
+    ;
+
+  optional_sign
+    : sign
+    |
     ;
 
   array

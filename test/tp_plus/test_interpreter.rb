@@ -493,18 +493,18 @@ LBL[101:ghjk] ;\n)
     assert_prog "UFRAME_NUM=1 ;\n"
   end
 
-  def test_fanuc_set_uframe_with_pr
-    parse("foo := PR[1]\nset_uframe 5, foo")
+  def test_set_uframe_with_pr
+    parse("foo := PR[1]\nindirect('user_frame',5)=foo")
     assert_prog "UFRAME[5]=PR[1:foo] ;\n"
   end
 
-  def test_fanuc_set_uframe_with_constant
-    parse("foo := PR[1]\nBAR := 5\nset_uframe BAR, foo")
+  def test_set_uframe_with_constant
+    parse("foo := PR[1]\nBAR := 5\nindirect('user_frame',BAR)=foo")
     assert_prog "UFRAME[5]=PR[1:foo] ;\n"
   end
 
   def test_fanuc_set_uframe_with_reg
-    parse("foo := PR[1]\nbar := R[1]\nset_uframe bar, foo")
+    parse("foo := PR[1]\nbar := R[1]\nindirect('user_frame',bar)=foo")
     assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
   end
 
@@ -1149,7 +1149,7 @@ GP1:
     assert_prog "R[1:foo]=5 MOD 2 ;\n"
   end
 
-    def test_assignment_to_sop
+  def test_assignment_to_sop
     parse %(foo := DO[1]\nbar := SO[1]\nfoo = bar)
     assert_prog "DO[1:foo]=(SO[1:bar]) ;\n"
   end
@@ -1245,6 +1245,36 @@ end)
   def test_conditional_equals
     parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
     assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+
+  def test_div
+    parse %(foo := R[1]\nfoo = 1 DIV 5)
+    assert_prog "R[1:foo]=1 DIV 5 ;\n"
+  end
+
+  def test_conditional_equals
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_fine_termination
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_parse_error_on_invalid_term
+    assert_raise do
+      parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-2)")
+    end
+  end
+
+  def test_term_fine_with_constant
+    parse("foo := PR[1]\nTERM := -1\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_term_cnt_with_constant
+    parse("foo := PR[1]\nTERM := 100\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
   end
 end
 
