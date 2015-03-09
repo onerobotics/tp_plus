@@ -7,8 +7,7 @@ module TPPlus
 
       def eval(context)
         if @value.is_a? DigitNode
-          v = @value.eval(context)
-          if v.is_a? Integer
+          if @value.value >= 0
             "CNT#{@value.eval(context)}"
           else
             "FINE"

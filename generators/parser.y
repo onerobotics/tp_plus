@@ -285,7 +285,7 @@ rule
   motion_modifier
     : DOT swallow_newlines AT LPAREN speed RPAREN
                                        { result = SpeedNode.new(val[4]) }
-    | DOT swallow_newlines TERM LPAREN termination RPAREN
+    | DOT swallow_newlines TERM LPAREN valid_terminations RPAREN
                                        { result = TerminationNode.new(val[4]) }
     | DOT swallow_newlines OFFSET LPAREN var RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
@@ -293,6 +293,16 @@ rule
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
     | DOT swallow_newlines SKIP LPAREN label optional_lpos_arg RPAREN
                                        { result = SkipNode.new(val[4],val[5]) }
+    ;
+
+valid_terminations
+    : integer
+    | var
+    | MINUS DIGIT                      {
+                                         raise Racc::ParseError, sprintf("\ninvalid termination type: (%s)", val[1]) if val[1] != 1
+                                         result = DigitNode.new(val[1].to_i * -1)
+
+                                       }
     ;
 
   optional_lpos_arg
@@ -304,11 +314,6 @@ rule
     : number
     | var
     ;
-
-  termination
-      : signed_number
-      | var
-      ;
 
   time_seg_actions
     : program_call
