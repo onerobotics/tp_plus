@@ -401,12 +401,12 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "PR[1,1:foo]=5 ;\nPR[1,2:foo]=6 ;\nPR[1,3:foo]=7 ;\nPR[1,4:foo]=8 ;\nPR[1,5:foo]=9 ;\nPR[1,6:foo]=10 ;\n"
   end
 
-  def test_pr_with_invalid_component_raises_error
-    parse("foo := PR[1]\nfoo.bar=5\n")
-    assert_raise(RuntimeError) do
-      assert_prog ""
-    end
-  end
+  #def test_pr_with_invalid_component_raises_error
+  #  parse("foo := PR[1]\nfoo.bar=5\n")
+  #  assert_raise(RuntimeError) do
+  #  assert_prog ""
+  #  end
+  #end
 
   def test_simple_case_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
@@ -1228,13 +1228,12 @@ end)
   end
 
   def test_pr_components_groups
-    parse("foo := PR[1]\nfoo.group(1).y=5\n")
-    assert_prog "PR[GP1:1,2:foo]=5 ;\n"
+    parse("foo := PR[1]\nfoo.g3.y=5\n")
+    assert_prog "PR[GP3:1,2:foo]=5 ;\n"
   end
 
   def test_if_statement_multiple_arguments
-    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\n
-foo = 1\nfoo2 = 2\nend")
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\nfoo = 1\nfoo2 = 2\nend")
     assert_prog "IF (R[1:foo]<>1 OR R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
   end
 
