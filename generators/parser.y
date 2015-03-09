@@ -12,6 +12,9 @@ token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
+token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
+token LABEL
+token false
 
 prechigh
 #  left DOT
@@ -28,38 +31,56 @@ preclow
 
 rule
   program
-    : /* nothing */
-    | statements                       { @interpreter.nodes = val[0].flatten }
+    #: statements                        { @interpreter.nodes = val[0].flatten }
+    : statements { @interpreter.nodes = val[0] }
+    |
     ;
+
 
   statements
-    : statement                        { result = val }
-    | statements terminator statement  { result = val[0] << val[1] << val[2] }
-      # to ignore trailing line breaks
-    | statements terminator            { result = val[0] << val[1] }
-    # this adds a couple conflicts
-    | terminator statements            { result = [val[0]] << val[1] }
-    | terminator                       { result = [val[0]] }
+    : statement terminator              {
+                                          result = [val[0]]
+                                          result << val[1] unless val[1].nil?
+                                        }
+    | statements statement terminator   {
+                                          result = val[0] << val[1]
+                                          result << val[2] unless val[2].nil?
+                                        }
     ;
 
+  #statements
+  #  : statement terminator             { result = val }
+  #  | statements terminator statement  { result = val[0] << val[1] << val[2] }
+  #    # to ignore trailing line breaks
+  #  | statements terminator            { result = val[0] << val[1] }
+  #  # this adds a couple conflicts
+  #  | terminator statements            { result = [val[0]] << val[1] }
+  #  | terminator                       { result = [val[0]] }
+  #  ;
+
   block
-    | statements                       { result = val[0] }
+    : optional_newline statements      { result = val[1] }
+    ;
+
+  optional_newline
+    : NEWLINE
+    |
     ;
 
   statement
-    #: comment                          { result = val[0] }
-    : definition
+    : comment
+    | definition
     | namespace
-    | assignment
+    #| assignment
     | motion_statement
-    | jump
-    | io_method
+    #| jump
+    #| io_method
     | label_definition
     | conditional
     | inline_conditional
     | forloop
     | while_loop
-    | program_call
+    #| program_call
     | use_statement
     | set_statement
     | wait_statement
@@ -69,8 +90,13 @@ rule
     | position_data
     | raise
     | tp_header_definition
+    | empty_stmt
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
+    ;
+
+  empty_stmt
+    : NEWLINE                         { result = EmptyStmtNode.new() }
     ;
 
   tp_header_definition
@@ -95,9 +121,9 @@ rule
     ;
 
   wait_statement
-    : WAIT_FOR '(' indirectable ',' STRING ')'
+    : WAIT_FOR LPAREN indirectable COMMA STRING RPAREN
                                        { result = WaitForNode.new(val[2], val[4]) }
-    | WAIT_UNTIL '(' expression ')' wait_modifiers
+    | WAIT_UNTIL LPAREN expression RPAREN wait_modifiers
                                        { result = WaitUntilNode.new(val[2],val[4]) }
     ;
 
@@ -108,14 +134,14 @@ rule
     ;
 
   wait_modifier
-    : DOT swallow_newlines TIMEOUT '(' label ')'
+    : DOT swallow_newlines TIMEOUT LPAREN label RPAREN
                                        { result = { label: val[4] } }
-    | DOT swallow_newlines AFTER '(' indirectable ',' STRING ')'
+    | DOT swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN
                                        { result = { timeout: [val[4],val[6]] } }
     ;
 
   label
-    : AT_SYM WORD                      { result = val[1] }
+    : LABEL { result = val[0] }
     ;
 
   use_statement
@@ -123,20 +149,20 @@ rule
     ;
 
   set_statement
-    : FANUC_SET indirectable ',' var
+    : FANUC_SET indirectable COMMA var
                                        { result = SetNode.new(val[0],val[1],val[3]) }
     # this introduces 2 conflicts somehow
     | FANUC_SET expression             { result = SetNode.new(val[0],nil,val[1]) }
     ;
 
   program_call
-    : WORD '(' args ')'                { result = CallNode.new(val[0],val[2]) }
-    | RUN WORD '(' args ')'            { result = CallNode.new(val[1],val[3],async: true) }
+    : WORD LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
+    | RUN WORD LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
     ;
 
   args
     : arg                              { result = [val[0]] }
-    | args ',' arg                     { result = val[0] << val[2] }
+    | args COMMA arg                     { result = val[0] << val[2] }
     |                                  { result = [] }
     ;
 
@@ -152,9 +178,9 @@ rule
 
   io_method
     : IO_METHOD var_or_indirect        { result = IOMethodNode.new(val[0],val[1]) }
-    | IO_METHOD '(' var_or_indirect ')'
+    | IO_METHOD LPAREN var_or_indirect RPAREN
                                        { result = IOMethodNode.new(val[0],val[2]) }
-    | IO_METHOD '(' var_or_indirect ',' number ',' STRING ')'
+    | IO_METHOD LPAREN var_or_indirect COMMA number COMMA STRING RPAREN
                                        { result = IOMethodNode.new(val[0],val[2],{ pulse_time: val[4], pulse_units: val[6] }) }
     ;
 
@@ -176,7 +202,7 @@ rule
     ;
 
   forloop
-    : FOR var IN '(' minmax_val TO minmax_val ')' block END
+    : FOR var IN LPAREN minmax_val TO minmax_val RPAREN block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8]) }
     ;
 
@@ -228,8 +254,9 @@ rule
     ;
 
   inline_conditional
-    : inlineable IF expression          { result = InlineConditionalNode.new("if",val[2],val[0]) }
-    | inlineable UNLESS expression      { result = InlineConditionalNode.new("unless",val[2],val[0]) }
+    : inlineable IF expression { result = InlineConditionalNode.new("if",val[2],val[0]) }
+    | inlineable UNLESS expression { result = InlineConditionalNode.new("unless",val[2],val[0]) }
+    | inlineable
     ;
 
   inlineable
@@ -245,9 +272,15 @@ rule
     ;
 
   motion_statement
+<<<<<<< HEAD
          : MOVE DOT swallow_newlines TO '(' var ')' motion_modifiers
                                             { result = MotionNode.new(val[0],val[5],val[7]) }
          ;
+=======
+    : MOVE DOT swallow_newlines TO LPAREN var RPAREN motion_modifiers
+                                       { result = MotionNode.new(val[0],val[5],val[7]) }
+    ;
+>>>>>>> onerobotics/master
 
   motion_modifiers
     : motion_modifier                  { result = val }
@@ -256,20 +289,20 @@ rule
     ;
 
   motion_modifier
-    : DOT swallow_newlines AT '(' speed ')'
+    : DOT swallow_newlines AT LPAREN speed RPAREN
                                        { result = SpeedNode.new(val[4]) }
-    | DOT swallow_newlines TERM '(' indirectable ')'
+    | DOT swallow_newlines TERM LPAREN indirectable RPAREN
                                        { result = TerminationNode.new(val[4]) }
-    | DOT swallow_newlines OFFSET '(' var ')'
+    | DOT swallow_newlines OFFSET LPAREN var RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
-    | DOT swallow_newlines TIME_SEGMENT '(' time ',' time_seg_actions ')'
+    | DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions RPAREN
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
-    | DOT swallow_newlines SKIP '(' label optional_lpos_arg ')'
+    | DOT swallow_newlines SKIP LPAREN label optional_lpos_arg RPAREN
                                        { result = SkipNode.new(val[4],val[5]) }
     ;
 
   optional_lpos_arg
-    : ',' var                          { result = val[1] }
+    : COMMA var                          { result = val[1] }
     |
     ;
 
@@ -289,7 +322,7 @@ rule
     ;
 
   speed
-    : indirectable ',' STRING          { result = { speed: val[0], units: val[2] } }
+    : indirectable COMMA STRING          { result = { speed: val[0], units: val[2] } }
     | STRING                           { result = { speed: val[0], units: nil } }
     ;
 
@@ -305,17 +338,18 @@ rule
     : var_or_indirect EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
     | var_or_indirect PLUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"+",val[3])
                                          )
                                        }
     | var_or_indirect MINUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"-",val[3])
                                          )
                                        }
     ;
 
   var
+<<<<<<< HEAD
          : WORD                             { result = VarNode.new(val[0]) }
          #| WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
          | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[2]) }
@@ -333,10 +367,17 @@ rule
         : DOT swallow_newlines WORD                   { result = { method: val[2] } }
         | DOT swallow_newlines GROUP '(' integer ')'   { result = { group: val[4] } }
         ;
+=======
+    : WORD                             { result = VarNode.new(val[0]) }
+    | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
+    # introduces 2 reduce/reduce conflicts and 1 useless rule
+    | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
+    ;
+>>>>>>> onerobotics/master
 
   namespaces
     : namespace                        { result = val }
-    | namespaces ':' ':' namespace     { result = val[0] << val[3] }
+    | namespaces COLON COLON namespace     { result = val[0] << val[3] }
     ;
 
   namespace
@@ -347,13 +388,13 @@ rule
   expression
     : factor                           { result = val[0] }
     | operator                         { result = val[0] }
-    | '(' expression ')'               { val[1].grouped = true; result = val[1] }
+    | LPAREN expression RPAREN         { result = ParenExpressionNode.new(val[1]) }
     ;
 
   #expression
   #  : simple_expression                         { result = val[0] }
   #  | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  | '(' expression ')'                        { result = val[1] }
+  #  | LPAREN expression RPAREN                        { result = val[1] }
   #  ;
 
   #simple_expression
@@ -372,30 +413,30 @@ rule
     | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     # 48 => 50 with prec on BANG (62) without
-    | BANG expression                  { result = ExpressionNode.new(val[1],val[0],nil) }
+    | BANG expression                  { result = ExpressionNode.new(val[1],"!",nil) }
     ;
 
   relop
-    : EEQUAL
-    | NOTEQUAL
-    | LT
-    | GT
-    | GTE
-    | LTE
+    : EEQUAL { result = "==" }
+    | NOTEQUAL { result = "<>" }
+    | LT { result = "<" }
+    | GT { result = ">" }
+    | GTE { result = ">=" }
+    | LTE { result = "<=" }
     ;
 
   addop
-    : PLUS
-    | MINUS
-    | OR
+    : PLUS { result = "+" }
+    | MINUS { result = "-" }
+    | OR { result = "||" }
     ;
 
   mulop
-    : STAR
-    | SLASH
-    | DIV
-    | MOD
-    | AND
+    : STAR { result = "*" }
+    | SLASH { result = "/" }
+    | DIV { result = "DIV" }
+    | MOD { result = "%" }
+    | AND { result = "&&" }
     ;
 
   factor
@@ -405,17 +446,20 @@ rule
     ;
 
   indirect_thing
-    : INDIRECT '(' STRING ',' indirectable ')'
+    : INDIRECT LPAREN STRING COMMA indirectable RPAREN
                                       { result = IndirectNode.new(val[2].to_sym, val[4]) }
     ;
 
   signed_number
-    : sign DIGIT                      { val[1] = val[1].to_i * -1 if val[0] == "-"; result = DigitNode.new(val[1]) }
+    : sign DIGIT                      {
+                                          val[1] = val[1].to_i * -1 if val[0] == "-"
+                                          result = DigitNode.new(val[1])
+                                      }
     | sign REAL                       { val[1] = val[1].to_f * -1 if val[0] == "-"; result = RealNode.new(val[1]) }
     ;
 
   sign
-    : MINUS
+    : MINUS { result = "-" }
     |
     ;
 
@@ -444,52 +488,55 @@ rule
 
 
   sreg
-    : SREG '[' DIGIT ']'               { result = StringRegisterNode.new(val[2].to_i) }
+    : SREG LBRACK DIGIT RBRACK               { result = StringRegisterNode.new(val[2].to_i) }
     ;
 
   ualm
-    : UALM '[' DIGIT ']'               { result = UserAlarmNode.new(val[2].to_i) }
+    : UALM LBRACK DIGIT RBRACK               { result = UserAlarmNode.new(val[2].to_i) }
     ;
 
   timer
-    : TIMER '[' DIGIT ']'              { result = TimerNode.new(val[2].to_i) }
+    : TIMER LBRACK DIGIT RBRACK              { result = TimerNode.new(val[2].to_i) }
     ;
 
   argument
-    : ARG '[' DIGIT ']'                { result = ArgumentNode.new(val[2].to_i) }
+    : ARG LBRACK DIGIT RBRACK                { result = ArgumentNode.new(val[2].to_i) }
     ;
 
   vreg
-    : VREG '[' DIGIT ']'               { result = VisionRegisterNode.new(val[2].to_i) }
+    : VREG LBRACK DIGIT RBRACK               { result = VisionRegisterNode.new(val[2].to_i) }
     ;
 
   position
-    : POSITION '[' DIGIT ']'           { result = PositionNode.new(val[2].to_i) }
+    : POSITION LBRACK DIGIT RBRACK           { result = PositionNode.new(val[2].to_i) }
     ;
 
   numreg
-    : NUMREG '[' DIGIT ']'             { result = NumregNode.new(val[2].to_i) }
+    : NUMREG LBRACK DIGIT RBRACK             { result = NumregNode.new(val[2].to_i) }
     ;
 
   posreg
-    : POSREG '[' DIGIT ']'             { result = PosregNode.new(val[2].to_i) }
+    : POSREG LBRACK DIGIT RBRACK             { result = PosregNode.new(val[2].to_i) }
     ;
 
   output
-    : OUTPUT '[' DIGIT ']'             { result = IONode.new(val[0], val[2].to_i) }
+    : OUTPUT LBRACK DIGIT RBRACK             { result = IONode.new(val[0], val[2].to_i) }
     ;
 
   input
-    : INPUT '[' DIGIT ']'              { result = IONode.new(val[0], val[2].to_i) }
+    : INPUT LBRACK DIGIT RBRACK              { result = IONode.new(val[0], val[2].to_i) }
     ;
 
   comment
-    : COMMENT                          { result = CommentNode.new(val[0]) }
+    : COMMENT                                { result = CommentNode.new(val[0]) }
     ;
 
   terminator
     : NEWLINE                          { result = TerminatorNode.new }
-    | comment                          { result = val[0] }
+    | comment optional_newline         { result = val[0] }
+              # ^-- consume newlines or else we will get an extra space from EmptyStmt in the output
+    | false
+    |
     ;
 
   swallow_newlines
@@ -507,18 +554,18 @@ rule
     ;
 
   hash
-    : '{' sn hash_attributes sn '}'    { result = val[2] }
-    | '{' sn '}'                       { result = {} }
+    : LBRACE sn hash_attributes sn RBRACE    { result = val[2] }
+    | LBRACE sn RBRACE                       { result = {} }
     ;
 
   hash_attributes
     : hash_attribute                   { result = val[0] }
-    | hash_attributes ',' sn hash_attribute
+    | hash_attributes COMMA sn hash_attribute
                                        { result = val[0].merge(val[3]) }
     ;
 
   hash_attribute
-    : STRING ':' hash_value              { result = { val[0].to_sym => val[2] } }
+    : STRING COLON hash_value              { result = { val[0].to_sym => val[2] } }
     ;
 
   hash_value
@@ -527,16 +574,16 @@ rule
     | array
     | sign DIGIT                       { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
     | sign REAL                        { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
-    | TRUE_FALSE
+    | TRUE_FALSE                       { result = val[0] == "true" }
     ;
 
   array
-    : '[' sn array_values sn ']'       { result = val[2] }
+    : LBRACK sn array_values sn RBRACK       { result = val[2] }
     ;
 
   array_values
     : array_value                      { result = val }
-    | array_values ',' sn array_value  { result = val[0] << val[3] }
+    | array_values COMMA sn array_value  { result = val[0] << val[3] }
     ;
 
   array_value
@@ -566,6 +613,8 @@ end
   end
 
   def parse
+    #@yydebug =true
+
     do_parse
     @interpreter
   rescue Racc::ParseError => e

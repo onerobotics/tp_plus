@@ -1,6 +1,6 @@
 namespace :compile do
   task :parser do
-    sh "racc -l -o lib/tp_plus/parser.rb generators/parser.y"
+    sh "racc -l -t -o lib/tp_plus/parser.rb generators/parser.y"
   end
 
   task :scanner do
@@ -19,3 +19,14 @@ Rake::TestTask.new do |t|
 end
 
 task default: :test
+
+
+desc "Run the TP+ benchmark"
+task :benchmark do
+  ruby "./performance/benchmark.rb"
+end
+
+desc "Run the TP+ profiler"
+task :profile do
+  ruby "./performance/profile.rb"
+end

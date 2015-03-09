@@ -5,34 +5,44 @@ class TestScanner < Test::Unit::TestCase
     @scanner = TPPlus::Scanner.new
   end
 
+  def assert_tok(token)
+    assert_token(token, nil)
+  end
+
   def assert_token(token, text)
-    assert_equal [token,text], @scanner.next_token
+    if text
+      assert_equal [token,text], @scanner.next_token
+    else
+      assert_equal token, @scanner.next_token[0]
+    end
   end
 
   def test_blank_string
     @scanner.scan_setup ""
     assert_nil @scanner.next_token
+    #assert_tok :EOF
   end
 
   def test_ignore_whitespace
     @scanner.scan_setup " "
     assert_nil @scanner.next_token
+    #assert_tok :EOF
   end
 
   def test_newline
     @scanner.scan_setup "\n"
-    assert_token :NEWLINE, "\n"
+    assert_tok :NEWLINE
   end
 
   def test_no_combine_newlines
     @scanner.scan_setup "\n\n"
-    assert_token :NEWLINE, "\n"
-    assert_token :NEWLINE, "\n"
+    assert_tok :NEWLINE
+    assert_tok :NEWLINE
   end
 
   def test_semicolon
     @scanner.scan_setup ";"
-    assert_token :SEMICOLON,";"
+    assert_tok :SEMICOLON
   end
 
   def test_real_with_dot
@@ -50,14 +60,19 @@ class TestScanner < Test::Unit::TestCase
     assert_token :DIGIT, 42
   end
 
+  def test_label
+    @scanner.scan_setup "@foo"
+    assert_token :LABEL, "foo"
+  end
+
   def test_true
     @scanner.scan_setup "true"
-    assert_token :TRUE_FALSE, true
+    assert_token :TRUE_FALSE, "true"
   end
 
   def test_false
     @scanner.scan_setup "false"
-    assert_token :TRUE_FALSE, false
+    assert_token :TRUE_FALSE, "false"
   end
 
   def test_numreg
@@ -137,74 +152,74 @@ class TestScanner < Test::Unit::TestCase
 
   def test_equal
     @scanner.scan_setup "="
-    assert_token :EQUAL, "="
+    assert_tok :EQUAL
   end
 
   def test_not_equal
     @scanner.scan_setup "<>"
-    assert_token :NOTEQUAL, "<>"
+    assert_tok :NOTEQUAL
     @scanner.scan_setup "!="
-    assert_token :NOTEQUAL, "!="
+    assert_tok :NOTEQUAL
   end
 
   def test_eequal
     @scanner.scan_setup "=="
-    assert_token :EEQUAL, "=="
+    assert_tok :EEQUAL
   end
 
   def test_gte
     @scanner.scan_setup ">="
-    assert_token :GTE, ">="
+    assert_tok :GTE
   end
 
   def test_lte
     @scanner.scan_setup "<="
-    assert_token :LTE, "<="
+    assert_tok :LTE
   end
 
   def test_lt
     @scanner.scan_setup "<"
-    assert_token :LT, "<"
+    assert_tok :LT
   end
 
   def test_gt
     @scanner.scan_setup ">"
-    assert_token :GT, ">"
+    assert_tok :GT
   end
 
   def test_plus
     @scanner.scan_setup "+"
-    assert_token :PLUS, "+"
+    assert_tok :PLUS
   end
 
   def test_minus
     @scanner.scan_setup "-"
-    assert_token :MINUS, "-"
+    assert_tok :MINUS
   end
 
   def test_star
     @scanner.scan_setup "*"
-    assert_token :STAR, "*"
+    assert_tok :STAR
   end
 
   def test_slash
     @scanner.scan_setup "/"
-    assert_token :SLASH, "/"
+    assert_tok :SLASH
   end
 
   def test_and
     @scanner.scan_setup "&&"
-    assert_token :AND, "&&"
+    assert_tok :AND
   end
 
   def test_or
     @scanner.scan_setup "||"
-    assert_token :OR, "||"
+    assert_tok :OR
   end
 
   def test_mod
     @scanner.scan_setup "%"
-    assert_token :MOD, "%"
+    assert_tok :MOD
   end
 
   def test_comment
@@ -214,13 +229,14 @@ class TestScanner < Test::Unit::TestCase
 
   def test_assign
     @scanner.scan_setup ":="
-    assert_token :ASSIGN, ":="
+    assert_tok :ASSIGN
+    assert_nil @scanner.next_token
   end
 
-  def test_at_sym
-    @scanner.scan_setup "@"
-    assert_token :AT_SYM, "@"
-  end
+  #def test_at_sym
+  #  @scanner.scan_setup "@"
+  #  assert_token :AT_SYM, "@"
+  #end
 
   def test_jump_to
     @scanner.scan_setup "jump_to"
@@ -259,7 +275,7 @@ class TestScanner < Test::Unit::TestCase
 
   def test_dot
     @scanner.scan_setup "."
-    assert_token :DOT, "."
+    assert_tok :DOT
   end
 
   def test_to
@@ -299,7 +315,7 @@ class TestScanner < Test::Unit::TestCase
 
    def test_carriage_return_newline_as_one
      @scanner.scan_setup "\r\n"
-     assert_token :NEWLINE, "\r\n"
+     assert_tok :NEWLINE
    end
 
    def test_use_uframe
@@ -379,7 +395,7 @@ class TestScanner < Test::Unit::TestCase
 
    def test_scans_bang_separate_from_word
      @scanner.scan_setup "!foo"
-     assert_token :BANG, "!"
+     assert_tok :BANG
      assert_token :WORD, "foo"
    end
 
@@ -435,22 +451,22 @@ class TestScanner < Test::Unit::TestCase
 
    def test_start
      @scanner.scan_setup "start"
-     assert_token :TIMER_METHOD, :start
+     assert_token :TIMER_METHOD, "start"
    end
 
    def test_stop
      @scanner.scan_setup "stop"
-     assert_token :TIMER_METHOD, :stop
+     assert_token :TIMER_METHOD, "stop"
    end
 
    def test_reset
      @scanner.scan_setup "reset"
-     assert_token :TIMER_METHOD, :reset
+     assert_token :TIMER_METHOD, "reset"
    end
 
    def test_restart
      @scanner.scan_setup "restart"
-     assert_token :TIMER_METHOD, :restart
+     assert_token :TIMER_METHOD, "restart"
    end
 
    def test_position_data
@@ -518,5 +534,30 @@ class TestScanner < Test::Unit::TestCase
    def test_abort
      @scanner.scan_setup "abort"
      assert_token :ABORT, "abort"
+   end
+
+   def test_ident
+     @scanner.scan_setup "foo_bar1 foo? foo!"
+     assert_token :WORD, "foo_bar1"
+     assert_token :WORD, "foo?"
+     assert_token :WORD, "foo!"
+   end
+
+   def test_punctuation
+     pairs = [
+       ['(', :LPAREN],
+       [')', :RPAREN],
+       ['[', :LBRACK],
+       [']', :RBRACK],
+       ['{', :LBRACE],
+       ['}', :RBRACE],
+       [',', :COMMA],
+       [':', :COLON]
+     ]
+
+     pairs.each do |pair|
+       @scanner.scan_setup pair[0]
+       assert_tok pair[1]
+     end
    end
 end

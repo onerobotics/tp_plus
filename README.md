@@ -1,6 +1,8 @@
 TP+
 ===
 
+[![Build Status](https://travis-ci.org/onerobotics/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
+
 TP+ is a higher-level language abstraction that translates into FANUC
 TP. It features many useful utilities that makes creating TP programs
 easier:
@@ -22,19 +24,17 @@ Examples
 example_1.tpp
 
     foo  := R[1]
-
     bar  := DO[1]
     baz  := DO[2]
 
     home := PR[1]
-
 
     foo = 1
 
     @loop
       foo += 1
 
-      jump_to @foo if foo < 10
+      jump_to @loop if foo < 10
 
     turn_on bar if foo == 5
     toggle baz
@@ -48,15 +48,17 @@ example_1.ls
     /MN
       1:  R[1:foo] = 1 ;
       1:   ;
-      1:  LBL[1:loop] ;
+      1:  LBL[100:loop] ;
       1:  R[1:foo]=R[1:foo]+1 ;
-      1:  IF R[1:foo]<10,JMP LBL[1] ;
+      1:  IF R[1:foo]<10,JMP LBL[100] ;
       1:   ;
       1:  IF (R[1:foo]=5),DO[1:bar]=(ON) ;
       1:  DO[2:baz]=(!DO[2:baz]) ;
       1:   ;
       1:  L PR[1:home] 2000mm/sec CNT0 ;
     /END
+
+For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.
 
 Usage
 -----

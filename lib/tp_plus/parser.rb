@@ -27,6 +27,8 @@ module TPPlus
   end
 
   def parse
+    #@yydebug =true
+
     do_parse
     @interpreter
   rescue Racc::ParseError => e
@@ -35,6 +37,7 @@ module TPPlus
 ##### State transition tables begin ###
 
 racc_action_table = [
+<<<<<<< HEAD
     89,    42,   118,    92,    64,    42,    75,    76,    64,   270,
     64,   213,    39,    76,    64,    92,   260,   212,    55,    34,
     55,    42,    39,    64,   -86,   300,    70,   -86,  -115,   300,
@@ -604,6 +607,530 @@ racc_reduce_table = [
 racc_reduce_n = 201
 
 racc_shift_n = 381
+=======
+    57,    57,    57,    57,    67,    57,    40,    37,   269,   112,
+    67,   120,    91,    37,    78,    67,   320,    52,   112,    40,
+    62,    62,    62,    62,   259,    25,   221,    92,    40,    35,
+    92,   293,   294,   139,    45,   297,   140,    56,   225,  -111,
+    45,   104,   297,   306,   105,    45,    41,  -111,  -111,    42,
+    43,   297,    44,    30,    31,   121,    89,    33,    34,    45,
+    46,   342,    56,   267,    29,   222,    28,    27,    24,    58,
+   291,    36,    26,    23,    57,    40,    37,    36,    64,    64,
+    64,    64,    32,    90,    36,   225,    52,   310,  -116,   249,
+   214,   202,   215,    36,    25,   311,   218,   193,    35,   151,
+    77,    78,    67,   218,   306,   173,   172,   170,   171,   168,
+   164,   226,   167,   165,   111,    41,    67,    89,    42,    43,
+    67,    44,    30,    31,    77,    78,    33,    34,    45,    46,
+   110,    56,    45,    29,   112,    28,    27,    24,    58,    67,
+    36,    26,    23,    57,    40,    37,    45,   212,   310,    67,
+    45,    32,   201,    56,   202,    52,   311,    85,   193,    89,
+   169,   231,   166,    25,   306,    95,   107,    35,   112,    45,
+   145,   144,    56,   112,   108,   109,   234,    89,   237,    45,
+   323,   322,    56,   211,    41,    67,   210,    42,    43,    67,
+    44,    30,    31,    67,    84,    33,    34,    45,    46,    67,
+    56,    85,    29,    89,    28,    27,    24,    58,   310,    36,
+    26,    23,    57,    40,    37,    45,   311,    67,   193,    45,
+    32,    67,    56,    45,    52,    85,    56,    89,    67,    45,
+    77,    78,    25,    67,   209,   106,    35,   339,    84,   354,
+    77,    78,    67,   336,   337,   338,   340,    45,   239,   240,
+    56,    45,   241,    41,   242,   243,    42,    43,    45,    44,
+    30,    31,    84,    45,    33,    34,    45,    46,   244,    56,
+   245,    29,    45,    28,    27,    24,    58,    67,    36,    26,
+    23,    77,    78,    67,    67,    85,   246,    89,    67,    32,
+   247,    85,    85,    89,    89,   248,    85,   208,    89,    78,
+    67,    67,   151,    77,    78,    67,   207,    45,   206,    85,
+    56,    89,   251,    45,    45,    67,    56,    56,    45,   117,
+   253,    56,    84,    85,   205,    89,   204,   203,    84,    84,
+    45,    45,    67,    84,    56,    45,    77,    78,    67,    67,
+    85,   263,    89,    67,   115,    45,    84,    85,    56,    89,
+   117,    85,   124,    89,   265,   194,    67,   270,   237,   112,
+    84,   273,    45,   274,    85,    56,    89,   275,    45,    45,
+    67,   276,    56,    45,   277,    67,    56,    84,    85,   278,
+    89,   279,   280,    85,    84,    89,    45,   281,    84,    56,
+   282,   283,   284,   285,   151,    77,    78,    67,   112,   112,
+    45,    84,   193,    56,   289,    45,   102,   292,    56,   191,
+    77,    78,    67,   295,   190,    84,   189,    32,   302,   303,
+    84,   128,   129,   132,   133,   130,   131,    45,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,    45,   134,   135,   137,   138,   139,   141,   136,
+   140,    77,    78,    67,    77,    78,    67,    77,    78,    67,
+    77,    78,    67,   112,    93,   195,    77,    78,    67,   312,
+   313,   314,   315,    90,   188,    72,   220,   269,   -99,   112,
+   200,    32,   112,    45,   117,   320,    45,   112,    71,    45,
+   333,   334,    45,   117,   335,   174,    70,   343,    45,   128,
+   129,   132,   133,   130,   131,   344,   134,   135,   137,   138,
+   139,   141,   136,   140,   117,   345,   346,   347,   348,   349,
+   128,   129,   132,   133,   130,   131,   112,   134,   135,   137,
+   138,   139,   141,   136,   140,   117,   351,    65,   112,   117,
+   180,   128,   129,   132,   133,   130,   131,    32,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,  -114,   134,   135,   137,   138,   139,   141,   136,
+   140,   128,   129,   132,   133,   130,   131,   362,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,   363,   134,   135,   137,   138,   139,   141,   136,
+   140,   128,   129,   132,   133,   130,   131,   364,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,   365,   134,   135,   137,   138,   139,   141,   136,
+   140,   128,   129,   132,   133,   130,   131,   366,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,   368,   134,   135,   137,   138,   139,   141,   136,
+   140,   128,   129,   132,   133,   130,   131,   369,   134,   135,
+   137,   138,   139,   141,   136,   140,   128,   129,   132,   133,
+   130,   131,    59,   134,   135,   137,   138,   139,   141,   136,
+   140,   373,   175,   375 ]
+
+racc_action_check = [
+    60,   298,   301,     3,    28,     2,     2,     2,   233,   330,
+   368,    65,    35,   366,   220,   220,   302,     2,   266,   287,
+    60,   298,   301,     3,   223,     2,   181,    35,   286,     2,
+    67,   272,   272,   143,    28,   366,   143,    28,   223,    35,
+   368,    47,   287,   292,    47,   220,     2,    35,    35,     2,
+     2,   286,     2,     2,     2,    65,   292,     2,     2,     2,
+     2,   330,     2,   233,     2,   182,     2,     2,     2,     2,
+   266,     2,     2,     2,   216,   216,   216,   366,    60,   298,
+   301,     3,     2,    35,   287,   183,   216,   292,    67,   213,
+   176,   213,   176,   286,   216,   292,   179,   292,   216,   175,
+   175,   175,   175,   178,   350,    91,    91,    91,    91,    91,
+    91,   186,    91,    91,    56,   216,   124,   350,   216,   216,
+    37,   216,   216,   216,    91,    91,   216,   216,   216,   216,
+    55,   216,   175,   216,    58,   216,   216,   216,   216,    95,
+   216,   216,   216,     0,     0,     0,   124,   173,   350,   189,
+    37,   216,   146,    37,   146,     0,   350,   189,   350,   189,
+    91,   191,    91,     0,   324,    37,    54,     0,   192,    95,
+    88,    88,    95,   193,    54,    54,   194,   324,   195,   189,
+   309,   309,   189,   172,     0,   190,   171,     0,     0,    27,
+     0,     0,     0,    42,   189,     0,     0,     0,     0,    43,
+     0,    42,     0,    42,     0,     0,     0,     0,   324,     0,
+     0,     0,   177,   177,   177,   190,   324,    41,   324,    27,
+     0,   346,    27,    42,   177,    41,    42,    41,    46,    43,
+   215,   215,   177,   263,   170,    52,   177,   329,    42,   344,
+   344,   344,   344,   329,   329,   329,   329,    41,   203,   204,
+    41,   346,   205,   177,   206,   207,   177,   177,    46,   177,
+   177,   177,    41,   263,   177,   177,   177,   177,   208,   177,
+   209,   177,   344,   177,   177,   177,   177,    44,   177,   177,
+   177,    34,    34,    34,   188,    44,   210,    44,   105,   177,
+   211,    34,   188,    34,   188,   212,   105,   169,   105,   284,
+   284,    85,    90,    90,    90,    90,   168,    44,   167,    85,
+    44,    85,   217,    34,   188,    84,    34,   188,   105,   218,
+   219,   105,    44,    84,   166,    84,   165,   164,    34,   188,
+   284,    85,    72,   105,    85,    90,    71,    71,    71,   127,
+    72,   226,    72,   107,    59,    84,    85,   127,    84,   127,
+    63,   107,    79,   107,   232,   122,   125,   234,   235,   237,
+    84,   239,    72,   240,   125,    72,   125,   241,    71,   127,
+   126,   242,   127,   107,   243,   104,   107,    72,   126,   244,
+   126,   245,   246,   104,   127,   104,   125,   247,   107,   125,
+   248,   250,   254,   257,   202,   202,   202,   202,   259,   260,
+   126,   125,   113,   126,   264,   104,    45,   269,   104,   111,
+    33,    33,    33,   283,   110,   126,   109,    40,   288,   290,
+   104,   123,   123,   123,   123,   123,   123,   202,   123,   123,
+   123,   123,   123,   123,   123,   123,   142,   142,   142,   142,
+   142,   142,    33,   142,   142,   142,   142,   142,   142,   142,
+   142,   313,   313,   313,   347,   347,   347,   345,   345,   345,
+   225,   225,   225,   291,    36,   123,   231,   231,   231,   293,
+   294,   295,   296,   297,   108,    31,   180,   304,    81,   311,
+   142,   312,   106,   313,   315,   318,   347,   320,    30,   345,
+   325,   326,   225,    97,   327,    92,    29,   334,   231,    97,
+    97,    97,    97,    97,    97,   336,    97,    97,    97,    97,
+    97,    97,    97,    97,   101,   337,   338,   339,   340,   341,
+   101,   101,   101,   101,   101,   101,   342,   101,   101,   101,
+   101,   101,   101,   101,   101,    99,   343,    26,   103,   102,
+   100,    99,    99,    99,    99,    99,    99,   348,    99,    99,
+    99,    99,    99,    99,    99,    99,   227,   227,   227,   227,
+   227,   227,     6,   227,   227,   227,   227,   227,   227,   227,
+   227,   185,   185,   185,   185,   185,   185,   352,   185,   185,
+   185,   185,   185,   185,   185,   185,   228,   228,   228,   228,
+   228,   228,   353,   228,   228,   228,   228,   228,   228,   228,
+   228,   187,   187,   187,   187,   187,   187,   355,   187,   187,
+   187,   187,   187,   187,   187,   187,   197,   197,   197,   197,
+   197,   197,   356,   197,   197,   197,   197,   197,   197,   197,
+   197,   198,   198,   198,   198,   198,   198,   357,   198,   198,
+   198,   198,   198,   198,   198,   198,   199,   199,   199,   199,
+   199,   199,   360,   199,   199,   199,   199,   199,   199,   199,
+   199,    80,    80,    80,    80,    80,    80,   363,    80,    80,
+    80,    80,    80,    80,    80,    80,   184,   184,   184,   184,
+   184,   184,     1,   184,   184,   184,   184,   184,   184,   184,
+   184,   367,    93,   370 ]
+
+racc_action_pointer = [
+   139,   682,     1,    -1,   nil,   nil,   487,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   508,   161,   -24,   471,
+   415,   402,   nil,   384,   255,    10,   436,    92,   nil,   nil,
+   336,   189,   165,   171,   249,   378,   200,    -4,   nil,   nil,
+   nil,   nil,   218,   nil,   137,    55,    41,   nil,   110,   344,
+    -4,   nil,   nil,   326,   nil,   -14,   nil,    13,   nil,   nil,
+   nil,   310,   304,   nil,   nil,   nil,   nil,   nil,   nil,   276,
+   631,   402,   nil,   nil,   287,   273,   nil,   nil,   144,   nil,
+   277,    98,   467,   619,   nil,   111,   nil,   469,   nil,   511,
+   490,   490,   515,   514,   347,   260,   458,   315,   445,   387,
+   339,   384,   nil,   323,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   279,   391,    88,   328,   342,   311,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   406,    -8,   nil,   nil,    78,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   250,   249,   247,   231,   229,   220,
+   157,   109,   106,    70,   nil,    74,    16,   208,    57,    50,
+   403,   -21,    18,    25,   646,   541,    93,   571,   256,   121,
+   157,    85,   144,   149,   151,   161,   nil,   586,   601,   616,
+   nil,   nil,   369,   221,   222,   225,   227,   228,   241,   243,
+   259,   263,   268,    15,   nil,   204,    70,   265,   295,   273,
+   -13,   nil,   nil,   -22,   nil,   434,   268,   526,   556,   nil,
+   nil,   440,   307,   -17,   283,   341,   nil,   335,   nil,   283,
+   285,   289,   293,   296,   301,   303,   304,   309,   312,   nil,
+   315,   nil,   nil,   nil,   374,   nil,   nil,   346,   nil,   374,
+   375,   nil,   nil,   205,   330,   nil,    -6,   nil,   nil,   332,
+   nil,   nil,   -23,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   388,   272,   nil,    23,    14,   344,   nil,
+   339,   439,    18,   396,   397,   397,   398,   400,    -3,   nil,
+   nil,    -2,    -1,   nil,   452,   nil,   nil,   nil,   nil,   154,
+   nil,   455,   400,   425,   nil,   460,   nil,   nil,   468,   nil,
+   463,   nil,   nil,   nil,   139,   416,   415,   447,   nil,   224,
+   -15,   nil,   nil,   nil,   472,   nil,   432,   442,   443,   444,
+   445,   441,   502,   462,   214,   431,   193,   428,   466,   nil,
+    79,   nil,   503,   516,   nil,   533,   548,   561,   nil,   nil,
+   576,   nil,   nil,   642,   nil,   nil,     7,   617,   -18,   nil,
+   619,   nil,   nil,   nil,   nil,   nil ]
+
+racc_action_default = [
+    -2,  -194,    -1,  -174,    -8,    -9,   -10,   -11,   -12,   -13,
+   -14,   -15,   -16,   -17,   -18,   -19,   -20,   -21,   -22,   -23,
+   -24,   -25,   -26,   -27,   -28,   -29,  -194,  -194,  -194,  -194,
+  -194,  -194,   -43,  -194,  -194,  -116,  -194,  -194,   -59,   -60,
+  -194,  -145,  -145,  -194,  -145,  -194,  -194,   -81,   -82,   -83,
+   -84,   -85,  -194,  -106,  -194,  -194,  -194,  -170,  -176,  -194,
+  -174,    -3,  -171,    -7,  -173,  -194,   -33,  -111,  -114,   -34,
+   -35,  -194,  -145,   -44,   -98,   -99,  -146,  -147,  -148,  -194,
+   -46,  -139,  -117,  -118,  -145,  -145,  -138,  -140,  -194,  -144,
+   -51,  -194,  -194,  -194,   -56,  -194,   -61,    -7,  -139,    -7,
+  -194,    -7,    -7,  -176,  -145,  -145,  -176,  -145,  -194,  -194,
+  -194,  -194,  -175,  -194,  -178,   376,    -4,    -6,  -172,   -30,
+   -31,   -32,  -194,  -194,  -194,  -145,  -145,  -145,  -124,  -125,
+  -126,  -127,  -128,  -129,  -130,  -131,  -132,  -133,  -134,  -135,
+  -136,  -137,  -194,  -123,  -142,  -143,  -194,   -49,   -52,   -53,
+   -54,   -55,  -107,  -149,  -150,  -151,  -152,  -153,  -154,  -155,
+  -156,  -157,  -158,  -159,  -194,  -194,  -194,  -194,  -194,  -194,
+  -194,  -194,  -194,  -194,  -112,   -51,  -194,  -194,   -87,   -87,
+  -194,  -194,  -194,  -194,   -79,   -80,  -194,  -108,  -145,  -145,
+  -194,  -194,  -176,  -176,  -194,   -38,   -45,  -120,  -121,  -122,
+  -119,   -47,  -194,  -194,  -194,  -194,  -194,  -194,  -194,  -194,
+  -194,  -194,  -194,  -194,   -57,  -194,    -5,  -194,    -7,  -194,
+  -194,   -65,   -68,   -76,   -70,  -194,  -194,  -109,  -110,  -113,
+  -114,  -194,  -194,  -194,  -194,   -37,   -39,  -176,   -50,  -194,
+  -194,  -194,  -194,  -194,  -194,  -194,  -194,  -194,  -194,   -48,
+  -194,   -62,   -86,   -63,  -194,   -66,   -67,  -194,   -71,  -176,
+  -176,   -73,   -74,  -194,  -194,  -177,  -176,  -180,  -181,  -194,
+   -36,   -40,  -194,  -160,  -161,  -162,  -163,  -164,  -165,  -166,
+  -167,  -168,  -169,  -194,  -194,   -69,  -194,  -194,  -194,  -141,
+  -194,  -176,  -145,  -194,  -194,  -194,  -194,  -194,  -174,   -77,
+   -78,  -174,  -194,  -179,  -194,  -183,  -184,  -185,  -186,  -194,
+  -189,  -176,  -194,  -194,   -58,    -7,   -75,   -72,   -88,   -89,
+  -176,  -182,  -187,  -188,  -145,  -194,  -194,  -194,   -90,  -194,
+  -176,  -191,  -193,   -41,  -194,   -64,  -194,  -194,  -194,  -194,
+  -194,  -194,  -176,  -194,  -194,  -194,  -194,  -194,  -194,  -190,
+  -145,   -42,  -194,  -194,  -105,  -194,  -194,  -194,  -102,  -103,
+   -97,  -192,   -91,  -194,   -92,   -93,  -194,  -194,  -194,  -104,
+  -194,  -100,  -101,   -95,   -96,   -94 ]
+
+racc_goto_table = [
+    38,    96,    38,    73,    79,    61,    63,   113,   148,   159,
+   178,     2,   179,   183,   181,   182,   186,     6,    60,     6,
+    39,   146,    39,   299,   299,   268,   309,    38,    38,   331,
+    66,    69,   236,    75,    81,   255,   254,    38,   224,   257,
+    94,   122,   223,   100,   319,   260,   103,    39,    39,   298,
+   301,   217,   219,   300,   300,   361,   372,    39,   309,    80,
+   328,   318,   116,    63,   238,   352,    97,    99,   357,   101,
+   370,    75,   271,   367,   152,   235,   153,   154,   258,   155,
+   156,   157,   158,   160,   309,   161,   162,   163,   119,   192,
+   149,   266,   118,   148,   305,    38,   321,   123,   176,   255,
+   296,   330,     1,   371,   nil,   nil,   213,   nil,   nil,   142,
+   143,   nil,   nil,   nil,   nil,    39,   nil,   nil,   nil,   nil,
+   148,   nil,   nil,   nil,   196,   nil,   nil,   nil,   nil,   184,
+   185,   252,   187,   250,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   232,   233,   261,   nil,   nil,   nil,   272,   nil,   nil,
+   197,   198,   199,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   286,
+   287,   nil,   nil,   nil,   nil,   149,   nil,    38,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   216,   nil,
+   229,   nil,   nil,   nil,     6,   nil,   nil,    39,   nil,   nil,
+   nil,   264,   149,   nil,   nil,   nil,   nil,   230,   nil,   nil,
+   nil,   nil,   nil,   227,   228,   290,    38,   nil,   nil,   nil,
+   256,   nil,   nil,   nil,   nil,   262,   nil,   nil,   327,   nil,
+   329,    75,    60,     6,   nil,   nil,    39,   nil,   nil,   nil,
+   304,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   324,   nil,   nil,   288,   nil,   359,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   325,   nil,   nil,   nil,   nil,   nil,   341,
+   nil,   nil,   nil,   326,   256,   nil,   nil,   nil,   nil,   nil,
+   nil,   350,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   316,    63,   nil,   317,    63,   nil,   nil,   nil,   nil,   360,
+   nil,   nil,   nil,    75,   353,   355,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,    75,    75,   356,   358,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   374 ]
+
+racc_goto_check = [
+    34,    33,    34,    28,    28,     4,     7,    78,    38,    38,
+     5,     2,     5,    32,     5,     5,    32,     9,     3,     9,
+    41,    36,    41,    35,    35,    81,    67,    34,    34,    85,
+    27,    27,    31,    34,    34,    45,    44,    34,    48,    47,
+    27,    28,    46,    34,    54,    49,    34,    41,    41,    50,
+    50,    43,    43,    42,    42,    85,    40,    41,    67,    29,
+    54,    53,     4,     7,    37,    55,    29,    29,    56,    29,
+    57,    34,    31,    58,    59,    30,    68,    69,    48,    70,
+    71,    72,    73,    74,    67,    75,    76,    77,    26,    79,
+    34,    80,     6,    38,    82,    34,    81,    29,    27,    45,
+    44,    84,     1,    35,   nil,   nil,    36,   nil,   nil,    29,
+    29,   nil,   nil,   nil,   nil,    41,   nil,   nil,   nil,   nil,
+    38,   nil,   nil,   nil,    34,   nil,   nil,   nil,   nil,    29,
+    29,     5,    29,    38,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,    78,    78,    38,   nil,   nil,   nil,    32,   nil,   nil,
+    29,    29,    29,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,    32,
+    32,   nil,   nil,   nil,   nil,    34,   nil,    34,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,     2,   nil,
+    34,   nil,   nil,   nil,     9,   nil,   nil,    41,   nil,   nil,
+   nil,    28,    34,   nil,   nil,   nil,   nil,     9,   nil,   nil,
+   nil,   nil,   nil,    29,    29,    78,    34,   nil,   nil,   nil,
+    34,   nil,   nil,   nil,   nil,    34,   nil,   nil,     5,   nil,
+    32,    34,     3,     9,   nil,   nil,    41,   nil,   nil,   nil,
+    78,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+    78,   nil,   nil,    34,   nil,    38,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,    33,   nil,   nil,   nil,   nil,   nil,    78,
+   nil,   nil,   nil,    28,    34,   nil,   nil,   nil,   nil,   nil,
+   nil,    78,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+     4,     7,   nil,     4,     7,   nil,   nil,   nil,   nil,    33,
+   nil,   nil,   nil,    34,    28,    28,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,    34,    34,    34,    34,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,    34 ]
+
+racc_goto_pointer = [
+   nil,   102,    11,    16,     2,   -87,    29,     3,   nil,    17,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,    23,     3,   -30,    25,
+  -120,  -163,   -90,   -39,     0,  -263,   -69,  -138,   -82,   nil,
+  -310,    20,  -233,  -127,  -184,  -185,  -141,  -184,  -145,  -180,
+  -237,   nil,   nil,  -241,  -258,  -279,  -279,  -296,  -287,   -17,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,  -266,   -15,   -14,
+   -12,   -11,   -10,    -9,    -8,    -6,    -5,    -4,   -51,   -24,
+  -142,  -208,  -198,   nil,  -223,  -295 ]
+
+racc_goto_default = [
+   nil,   nil,   nil,     3,   nil,   nil,   177,     4,     5,    68,
+     7,     8,     9,    10,    11,    12,    13,    14,    15,    16,
+    17,    18,    19,    20,    21,    22,   nil,    54,   nil,   nil,
+   nil,   nil,   114,    53,    98,    51,   nil,   147,    74,   150,
+    50,    87,    48,   nil,   nil,    76,   nil,   nil,   nil,   nil,
+   nil,    47,    49,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+    55,    82,    83,   125,   126,   127,    86,    88,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   307,
+   nil,   nil,   332,   308,   nil,   nil ]
+
+racc_reduce_table = [
+  0, 0, :racc_error,
+  1, 84, :_reduce_1,
+  0, 84, :_reduce_none,
+  2, 85, :_reduce_3,
+  3, 85, :_reduce_4,
+  2, 88, :_reduce_5,
+  1, 89, :_reduce_none,
+  0, 89, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_none,
+  1, 86, :_reduce_27,
+  1, 86, :_reduce_28,
+  1, 108, :_reduce_29,
+  3, 107, :_reduce_30,
+  1, 109, :_reduce_none,
+  1, 109, :_reduce_none,
+  2, 106, :_reduce_33,
+  2, 104, :_reduce_34,
+  2, 103, :_reduce_35,
+  6, 101, :_reduce_36,
+  5, 101, :_reduce_37,
+  0, 113, :_reduce_none,
+  1, 113, :_reduce_39,
+  2, 113, :_reduce_40,
+  6, 114, :_reduce_41,
+  8, 114, :_reduce_42,
+  1, 116, :_reduce_43,
+  2, 99, :_reduce_44,
+  4, 100, :_reduce_45,
+  2, 100, :_reduce_46,
+  4, 118, :_reduce_47,
+  5, 118, :_reduce_48,
+  1, 119, :_reduce_49,
+  3, 119, :_reduce_50,
+  0, 119, :_reduce_51,
+  1, 120, :_reduce_none,
+  1, 120, :_reduce_none,
+  1, 120, :_reduce_none,
+  1, 122, :_reduce_55,
+  2, 123, :_reduce_56,
+  4, 123, :_reduce_57,
+  8, 123, :_reduce_58,
+  1, 110, :_reduce_none,
+  1, 110, :_reduce_none,
+  2, 125, :_reduce_61,
+  5, 95, :_reduce_62,
+  5, 95, :_reduce_63,
+  10, 97, :_reduce_64,
+  4, 98, :_reduce_65,
+  1, 127, :_reduce_none,
+  1, 127, :_reduce_none,
+  4, 92, :_reduce_68,
+  6, 102, :_reduce_69,
+  1, 129, :_reduce_70,
+  2, 129, :_reduce_71,
+  5, 131, :_reduce_72,
+  1, 132, :_reduce_none,
+  1, 132, :_reduce_none,
+  4, 130, :_reduce_75,
+  0, 130, :_reduce_none,
+  1, 133, :_reduce_none,
+  1, 133, :_reduce_none,
+  3, 96, :_reduce_79,
+  3, 96, :_reduce_80,
+  1, 96, :_reduce_none,
+  1, 134, :_reduce_none,
+  1, 134, :_reduce_none,
+  1, 134, :_reduce_none,
+  1, 134, :_reduce_none,
+  2, 126, :_reduce_86,
+  0, 126, :_reduce_87,
+  8, 93, :_reduce_88,
+  1, 136, :_reduce_89,
+  2, 136, :_reduce_90,
+  6, 137, :_reduce_91,
+  6, 137, :_reduce_92,
+  6, 137, :_reduce_93,
+  8, 137, :_reduce_94,
+  7, 137, :_reduce_95,
+  2, 141, :_reduce_96,
+  0, 141, :_reduce_none,
+  1, 111, :_reduce_none,
+  1, 111, :_reduce_none,
+  1, 140, :_reduce_none,
+  1, 140, :_reduce_none,
+  1, 139, :_reduce_none,
+  1, 139, :_reduce_none,
+  3, 138, :_reduce_104,
+  1, 138, :_reduce_105,
+  1, 94, :_reduce_106,
+  3, 91, :_reduce_107,
+  3, 135, :_reduce_108,
+  4, 135, :_reduce_109,
+  4, 135, :_reduce_110,
+  1, 117, :_reduce_111,
+  3, 117, :_reduce_112,
+  4, 117, :_reduce_113,
+  1, 143, :_reduce_114,
+  4, 143, :_reduce_115,
+  1, 92, :_reduce_116,
+  1, 112, :_reduce_117,
+  1, 112, :_reduce_118,
+  3, 112, :_reduce_119,
+  3, 145, :_reduce_120,
+  3, 145, :_reduce_121,
+  3, 145, :_reduce_122,
+  2, 145, :_reduce_123,
+  1, 146, :_reduce_124,
+  1, 146, :_reduce_125,
+  1, 146, :_reduce_126,
+  1, 146, :_reduce_127,
+  1, 146, :_reduce_128,
+  1, 146, :_reduce_129,
+  1, 147, :_reduce_130,
+  1, 147, :_reduce_131,
+  1, 147, :_reduce_132,
+  1, 148, :_reduce_133,
+  1, 148, :_reduce_134,
+  1, 148, :_reduce_135,
+  1, 148, :_reduce_136,
+  1, 148, :_reduce_137,
+  1, 144, :_reduce_none,
+  1, 144, :_reduce_none,
+  1, 144, :_reduce_none,
+  6, 124, :_reduce_141,
+  2, 149, :_reduce_142,
+  2, 149, :_reduce_143,
+  1, 150, :_reduce_144,
+  0, 150, :_reduce_none,
+  1, 121, :_reduce_none,
+  1, 121, :_reduce_147,
+  1, 128, :_reduce_148,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  1, 142, :_reduce_none,
+  4, 160, :_reduce_160,
+  4, 159, :_reduce_161,
+  4, 158, :_reduce_162,
+  4, 157, :_reduce_163,
+  4, 156, :_reduce_164,
+  4, 155, :_reduce_165,
+  4, 151, :_reduce_166,
+  4, 154, :_reduce_167,
+  4, 152, :_reduce_168,
+  4, 153, :_reduce_169,
+  1, 90, :_reduce_170,
+  1, 87, :_reduce_171,
+  2, 87, :_reduce_172,
+  1, 87, :_reduce_none,
+  0, 87, :_reduce_none,
+  1, 115, :_reduce_175,
+  0, 115, :_reduce_none,
+  5, 105, :_reduce_177,
+  1, 161, :_reduce_none,
+  5, 162, :_reduce_179,
+  3, 162, :_reduce_180,
+  1, 163, :_reduce_181,
+  4, 163, :_reduce_182,
+  3, 164, :_reduce_183,
+  1, 165, :_reduce_none,
+  1, 165, :_reduce_none,
+  1, 165, :_reduce_none,
+  2, 165, :_reduce_187,
+  2, 165, :_reduce_188,
+  1, 165, :_reduce_189,
+  5, 166, :_reduce_190,
+  1, 167, :_reduce_191,
+  4, 167, :_reduce_192,
+  1, 168, :_reduce_none ]
+
+racc_reduce_n = 194
+
+racc_shift_n = 376
+>>>>>>> onerobotics/master
 
 racc_token_table = {
   false => 0,
@@ -629,6 +1156,7 @@ racc_token_table = {
   :TERM => 20,
   :OFFSET => 21,
   :SKIP => 22,
+<<<<<<< HEAD
   :GROUP => 23,
   :SEMICOLON => 24,
   :NEWLINE => 25,
@@ -690,6 +1218,70 @@ racc_token_table = {
   "}" => 81 }
 
 racc_nt_base = 82
+=======
+  :SEMICOLON => 23,
+  :NEWLINE => 24,
+  :STRING => 25,
+  :REAL => 26,
+  :DIGIT => 27,
+  :WORD => 28,
+  :EQUAL => 29,
+  :EEQUAL => 30,
+  :NOTEQUAL => 31,
+  :GTE => 32,
+  :LTE => 33,
+  :LT => 34,
+  :GT => 35,
+  :BANG => 36,
+  :PLUS => 37,
+  :MINUS => 38,
+  :STAR => 39,
+  :SLASH => 40,
+  :DIV => 41,
+  :AND => 42,
+  :OR => 43,
+  :MOD => 44,
+  :IF => 45,
+  :ELSE => 46,
+  :END => 47,
+  :UNLESS => 48,
+  :FOR => 49,
+  :IN => 50,
+  :WHILE => 51,
+  :WAIT_FOR => 52,
+  :WAIT_UNTIL => 53,
+  :TIMEOUT => 54,
+  :AFTER => 55,
+  :FANUC_USE => 56,
+  :FANUC_SET => 57,
+  :NAMESPACE => 58,
+  :CASE => 59,
+  :WHEN => 60,
+  :INDIRECT => 61,
+  :POSITION => 62,
+  :EVAL => 63,
+  :TIMER => 64,
+  :TIMER_METHOD => 65,
+  :RAISE => 66,
+  :ABORT => 67,
+  :POSITION_DATA => 68,
+  :TRUE_FALSE => 69,
+  :RUN => 70,
+  :TP_HEADER => 71,
+  :PAUSE => 72,
+  :LPAREN => 73,
+  :RPAREN => 74,
+  :COLON => 75,
+  :COMMA => 76,
+  :LBRACK => 77,
+  :RBRACK => 78,
+  :LBRACE => 79,
+  :RBRACE => 80,
+  :LABEL => 81,
+  :false => 82 }
+
+racc_nt_base = 83
+>>>>>>> onerobotics/master
 
 racc_use_result_var = true
 
@@ -784,32 +1376,32 @@ Racc_token_to_s_table = [
   "RUN",
   "TP_HEADER",
   "PAUSE",
-  "\"(\"",
-  "\",\"",
-  "\")\"",
-  "\":\"",
-  "\"[\"",
-  "\"]\"",
-  "\"{\"",
-  "\"}\"",
+  "LPAREN",
+  "RPAREN",
+  "COLON",
+  "COMMA",
+  "LBRACK",
+  "RBRACK",
+  "LBRACE",
+  "RBRACE",
+  "LABEL",
+  "false",
   "$start",
   "program",
   "statements",
   "statement",
   "terminator",
   "block",
+  "optional_newline",
+  "comment",
   "definition",
   "namespace",
-  "assignment",
   "motion_statement",
-  "jump",
-  "io_method",
   "label_definition",
   "conditional",
   "inline_conditional",
   "forloop",
   "while_loop",
-  "program_call",
   "use_statement",
   "set_statement",
   "wait_statement",
@@ -819,6 +1411,7 @@ Racc_token_to_s_table = [
   "position_data",
   "raise",
   "tp_header_definition",
+  "empty_stmt",
   "tp_header_value",
   "var_or_indirect",
   "indirectable",
@@ -828,11 +1421,14 @@ Racc_token_to_s_table = [
   "swallow_newlines",
   "label",
   "var",
+  "program_call",
   "args",
   "arg",
   "number",
   "string",
+  "io_method",
   "indirect_thing",
+  "jump",
   "else_block",
   "minmax_val",
   "integer",
@@ -842,6 +1438,7 @@ Racc_token_to_s_table = [
   "case_allowed_condition",
   "case_allowed_statement",
   "inlineable",
+  "assignment",
   "motion_modifiers",
   "motion_modifier",
   "speed",
@@ -870,7 +1467,6 @@ Racc_token_to_s_table = [
   "timer",
   "ualm",
   "sreg",
-  "comment",
   "sn",
   "hash",
   "hash_attributes",
@@ -880,50 +1476,45 @@ Racc_token_to_s_table = [
   "array_values",
   "array_value" ]
 
-Racc_debug_parser = false
+Racc_debug_parser = true
 
 ##### State transition tables end #####
 
 # reduce 0 omitted
 
-# reduce 1 omitted
-
-def _reduce_2(val, _values, result)
- @interpreter.nodes = val[0].flatten 
+def _reduce_1(val, _values, result)
+ @interpreter.nodes = val[0] 
     result
 end
 
+# reduce 2 omitted
+
 def _reduce_3(val, _values, result)
- result = val 
+                                          result = [val[0]]
+                                          result << val[1] unless val[1].nil?
+                                        
     result
 end
 
 def _reduce_4(val, _values, result)
- result = val[0] << val[1] << val[2] 
+                                          result = val[0] << val[1]
+                                          result << val[2] unless val[2].nil?
+                                        
     result
 end
 
 def _reduce_5(val, _values, result)
- result = val[0] << val[1] 
+ result = val[1] 
     result
 end
 
-def _reduce_6(val, _values, result)
- result = [val[0]] << val[1] 
-    result
-end
+# reduce 6 omitted
 
-def _reduce_7(val, _values, result)
- result = [val[0]] 
-    result
-end
+# reduce 7 omitted
 
 # reduce 8 omitted
 
-def _reduce_9(val, _values, result)
- result = val[0] 
-    result
-end
+# reduce 9 omitted
 
 # reduce 10 omitted
 
@@ -959,206 +1550,212 @@ end
 
 # reduce 26 omitted
 
-# reduce 27 omitted
-
-# reduce 28 omitted
-
-# reduce 29 omitted
-
-# reduce 30 omitted
-
-def _reduce_31(val, _values, result)
+def _reduce_27(val, _values, result)
  result = PauseNode.new 
     result
 end
 
-def _reduce_32(val, _values, result)
+def _reduce_28(val, _values, result)
  result = AbortNode.new 
     result
 end
 
-def _reduce_33(val, _values, result)
+def _reduce_29(val, _values, result)
+ result = EmptyStmtNode.new() 
+    result
+end
+
+def _reduce_30(val, _values, result)
  result = HeaderNode.new(val[0],val[2]) 
     result
 end
 
-# reduce 34 omitted
+# reduce 31 omitted
 
-# reduce 35 omitted
+# reduce 32 omitted
 
-def _reduce_36(val, _values, result)
+def _reduce_33(val, _values, result)
  result = RaiseNode.new(val[1]) 
     result
 end
 
-def _reduce_37(val, _values, result)
+def _reduce_34(val, _values, result)
  result = TimerMethodNode.new(val[0],val[1]) 
     result
 end
 
-def _reduce_38(val, _values, result)
+def _reduce_35(val, _values, result)
  result = EvalNode.new(val[1]) 
     result
 end
 
-def _reduce_39(val, _values, result)
+def _reduce_36(val, _values, result)
  result = WaitForNode.new(val[2], val[4]) 
     result
 end
 
-def _reduce_40(val, _values, result)
+def _reduce_37(val, _values, result)
  result = WaitUntilNode.new(val[2],val[4]) 
     result
 end
 
-# reduce 41 omitted
+# reduce 38 omitted
 
-def _reduce_42(val, _values, result)
+def _reduce_39(val, _values, result)
  result = val[0] 
     result
 end
 
-def _reduce_43(val, _values, result)
+def _reduce_40(val, _values, result)
  result = val[0].merge(val[1]) 
     result
 end
 
-def _reduce_44(val, _values, result)
+def _reduce_41(val, _values, result)
  result = { label: val[4] } 
     result
 end
 
-def _reduce_45(val, _values, result)
+def _reduce_42(val, _values, result)
  result = { timeout: [val[4],val[6]] } 
     result
 end
 
-def _reduce_46(val, _values, result)
- result = val[1] 
+def _reduce_43(val, _values, result)
+ result = val[0] 
     result
 end
 
-def _reduce_47(val, _values, result)
+def _reduce_44(val, _values, result)
  result = UseNode.new(val[0],val[1]) 
     result
 end
 
-def _reduce_48(val, _values, result)
+def _reduce_45(val, _values, result)
  result = SetNode.new(val[0],val[1],val[3]) 
     result
 end
 
-def _reduce_49(val, _values, result)
+def _reduce_46(val, _values, result)
  result = SetNode.new(val[0],nil,val[1]) 
     result
 end
 
-def _reduce_50(val, _values, result)
+def _reduce_47(val, _values, result)
  result = CallNode.new(val[0],val[2]) 
     result
 end
 
-def _reduce_51(val, _values, result)
+def _reduce_48(val, _values, result)
  result = CallNode.new(val[1],val[3],async: true) 
     result
 end
 
-def _reduce_52(val, _values, result)
+def _reduce_49(val, _values, result)
  result = [val[0]] 
     result
 end
 
-def _reduce_53(val, _values, result)
+def _reduce_50(val, _values, result)
  result = val[0] << val[2] 
     result
 end
 
-def _reduce_54(val, _values, result)
+def _reduce_51(val, _values, result)
  result = [] 
     result
 end
 
-# reduce 55 omitted
+# reduce 52 omitted
 
-# reduce 56 omitted
+# reduce 53 omitted
 
-# reduce 57 omitted
+# reduce 54 omitted
 
-def _reduce_58(val, _values, result)
+def _reduce_55(val, _values, result)
  result = StringNode.new(val[0]) 
     result
 end
 
-def _reduce_59(val, _values, result)
+def _reduce_56(val, _values, result)
  result = IOMethodNode.new(val[0],val[1]) 
     result
 end
 
-def _reduce_60(val, _values, result)
+def _reduce_57(val, _values, result)
  result = IOMethodNode.new(val[0],val[2]) 
     result
 end
 
-def _reduce_61(val, _values, result)
+def _reduce_58(val, _values, result)
  result = IOMethodNode.new(val[0],val[2],{ pulse_time: val[4], pulse_units: val[6] }) 
     result
 end
 
-# reduce 62 omitted
+# reduce 59 omitted
 
-# reduce 63 omitted
+# reduce 60 omitted
 
-def _reduce_64(val, _values, result)
+def _reduce_61(val, _values, result)
  result = JumpNode.new(val[1]) 
     result
 end
 
-def _reduce_65(val, _values, result)
+def _reduce_62(val, _values, result)
  result = ConditionalNode.new("if",val[1],val[2],val[3]) 
     result
 end
 
-def _reduce_66(val, _values, result)
+def _reduce_63(val, _values, result)
  result = ConditionalNode.new("unless",val[1],val[2],val[3]) 
     result
 end
 
-def _reduce_67(val, _values, result)
+def _reduce_64(val, _values, result)
  result = ForNode.new(val[1],val[4],val[6],val[8]) 
     result
 end
 
-def _reduce_68(val, _values, result)
+def _reduce_65(val, _values, result)
  result = WhileNode.new(val[1],val[2]) 
     result
 end
 
-# reduce 69 omitted
+# reduce 66 omitted
 
-# reduce 70 omitted
+# reduce 67 omitted
 
-def _reduce_71(val, _values, result)
+def _reduce_68(val, _values, result)
  result = NamespaceNode.new(val[1],val[2]) 
     result
 end
 
-def _reduce_72(val, _values, result)
+def _reduce_69(val, _values, result)
  result = CaseNode.new(val[1],val[3],val[4]) 
     result
 end
 
-def _reduce_73(val, _values, result)
+def _reduce_70(val, _values, result)
  result = val 
     result
 end
 
-def _reduce_74(val, _values, result)
+def _reduce_71(val, _values, result)
  result = val[0] << val[1] << val[2] 
     result
 end
 
-def _reduce_75(val, _values, result)
+def _reduce_72(val, _values, result)
  result = CaseConditionNode.new(val[1],val[3]) 
+    result
+end
+
+# reduce 73 omitted
+
+# reduce 74 omitted
+
+def _reduce_75(val, _values, result)
+ result = CaseConditionNode.new(nil,val[2]) 
     result
 end
 
@@ -1166,89 +1763,86 @@ end
 
 # reduce 77 omitted
 
-def _reduce_78(val, _values, result)
- result = CaseConditionNode.new(nil,val[2]) 
-    result
-end
+# reduce 78 omitted
 
-# reduce 79 omitted
-
-# reduce 80 omitted
-
-# reduce 81 omitted
-
-def _reduce_82(val, _values, result)
+def _reduce_79(val, _values, result)
  result = InlineConditionalNode.new("if",val[2],val[0]) 
     result
 end
 
-def _reduce_83(val, _values, result)
+def _reduce_80(val, _values, result)
  result = InlineConditionalNode.new("unless",val[2],val[0]) 
     result
 end
+
+# reduce 81 omitted
+
+# reduce 82 omitted
+
+# reduce 83 omitted
 
 # reduce 84 omitted
 
 # reduce 85 omitted
 
-# reduce 86 omitted
-
-# reduce 87 omitted
-
-def _reduce_88(val, _values, result)
+def _reduce_86(val, _values, result)
  result = val[1] 
     result
 end
 
-def _reduce_89(val, _values, result)
+def _reduce_87(val, _values, result)
  result = [] 
     result
 end
 
-def _reduce_90(val, _values, result)
+def _reduce_88(val, _values, result)
  result = MotionNode.new(val[0],val[5],val[7]) 
     result
 end
 
-def _reduce_91(val, _values, result)
+def _reduce_89(val, _values, result)
  result = val 
     result
 end
 
-def _reduce_92(val, _values, result)
+def _reduce_90(val, _values, result)
  result = val[0] << val[1] 
     result
 end
 
-def _reduce_93(val, _values, result)
+def _reduce_91(val, _values, result)
  result = SpeedNode.new(val[4]) 
     result
 end
 
-def _reduce_94(val, _values, result)
+def _reduce_92(val, _values, result)
  result = TerminationNode.new(val[4]) 
     result
 end
 
-def _reduce_95(val, _values, result)
+def _reduce_93(val, _values, result)
  result = OffsetNode.new(val[2],val[4]) 
     result
 end
 
-def _reduce_96(val, _values, result)
+def _reduce_94(val, _values, result)
  result = TimeNode.new(val[2],val[4],val[6]) 
     result
 end
 
-def _reduce_97(val, _values, result)
+def _reduce_95(val, _values, result)
  result = SkipNode.new(val[4],val[5]) 
     result
 end
 
-def _reduce_98(val, _values, result)
+def _reduce_96(val, _values, result)
  result = val[1] 
     result
 end
+
+# reduce 97 omitted
+
+# reduce 98 omitted
 
 # reduce 99 omitted
 
@@ -1260,6 +1854,7 @@ end
 
 # reduce 103 omitted
 
+<<<<<<< HEAD
 # reduce 104 omitted
 
 # reduce 105 omitted
@@ -1269,63 +1864,104 @@ end
 # reduce 107 omitted
 
 def _reduce_108(val, _values, result)
+=======
+def _reduce_104(val, _values, result)
+>>>>>>> onerobotics/master
  result = { speed: val[0], units: val[2] } 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_109(val, _values, result)
+=======
+def _reduce_105(val, _values, result)
+>>>>>>> onerobotics/master
  result = { speed: val[0], units: nil } 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_110(val, _values, result)
+=======
+def _reduce_106(val, _values, result)
+>>>>>>> onerobotics/master
  result = LabelDefinitionNode.new(val[0]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_111(val, _values, result)
+=======
+def _reduce_107(val, _values, result)
+>>>>>>> onerobotics/master
  result = DefinitionNode.new(val[0],val[2]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_112(val, _values, result)
+=======
+def _reduce_108(val, _values, result)
+>>>>>>> onerobotics/master
  result = AssignmentNode.new(val[0],val[2]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_113(val, _values, result)
+=======
+def _reduce_109(val, _values, result)
+>>>>>>> onerobotics/master
  result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"+",val[3])
                                          )
                                        
     result
 end
 
+<<<<<<< HEAD
 def _reduce_114(val, _values, result)
+=======
+def _reduce_110(val, _values, result)
+>>>>>>> onerobotics/master
  result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"-",val[3])
                                          )
                                        
     result
 end
 
+<<<<<<< HEAD
 def _reduce_115(val, _values, result)
+=======
+def _reduce_111(val, _values, result)
+>>>>>>> onerobotics/master
  result = VarNode.new(val[0]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_116(val, _values, result)
  result = VarMethodNode.new(val[0],val[1]) 
     result
 end
 
 def _reduce_117(val, _values, result)
+=======
+def _reduce_112(val, _values, result)
+ result = VarMethodNode.new(val[0],val[2]) 
+    result
+end
+
+def _reduce_113(val, _values, result)
+>>>>>>> onerobotics/master
  result = NamespacedVarNode.new(val[0],val[3]) 
     result
 end
 
+<<<<<<< HEAD
 # reduce 118 omitted
 
 def _reduce_119(val, _values, result)
@@ -1349,20 +1985,42 @@ def _reduce_122(val, _values, result)
 end
 
 def _reduce_123(val, _values, result)
+=======
+def _reduce_114(val, _values, result)
+>>>>>>> onerobotics/master
  result = val 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_124(val, _values, result)
+=======
+def _reduce_115(val, _values, result)
+>>>>>>> onerobotics/master
  result = val[0] << val[3] 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_125(val, _values, result)
+=======
+def _reduce_116(val, _values, result)
  result = val[0] 
     result
 end
 
+def _reduce_117(val, _values, result)
+ result = val[0] 
+    result
+end
+
+def _reduce_118(val, _values, result)
+>>>>>>> onerobotics/master
+ result = val[0] 
+    result
+end
+
+<<<<<<< HEAD
 def _reduce_126(val, _values, result)
  result = val[0] 
     result
@@ -1375,6 +2033,20 @@ end
 
 def _reduce_128(val, _values, result)
  val[1].grouped = true; result = val[1] 
+=======
+def _reduce_119(val, _values, result)
+ result = ParenExpressionNode.new(val[1]) 
+    result
+end
+
+def _reduce_120(val, _values, result)
+ result = ExpressionNode.new(val[0],val[1],val[2]) 
+    result
+end
+
+def _reduce_121(val, _values, result)
+ result = ExpressionNode.new(val[0],val[1],val[2]) 
+>>>>>>> onerobotics/master
     result
 end
 
@@ -1383,6 +2055,7 @@ def _reduce_129(val, _values, result)
     result
 end
 
+<<<<<<< HEAD
 def _reduce_130(val, _values, result)
  result = ExpressionNode.new(val[0],val[1],val[2]) 
     result
@@ -1399,14 +2072,82 @@ def _reduce_132(val, _values, result)
 end
 
 # reduce 133 omitted
+=======
+def _reduce_123(val, _values, result)
+ result = ExpressionNode.new(val[1],"!",nil) 
+    result
+end
 
-# reduce 134 omitted
+def _reduce_124(val, _values, result)
+ result = "==" 
+    result
+end
 
-# reduce 135 omitted
+def _reduce_125(val, _values, result)
+ result = "<>" 
+    result
+end
 
-# reduce 136 omitted
+def _reduce_126(val, _values, result)
+ result = "<" 
+    result
+end
 
-# reduce 137 omitted
+def _reduce_127(val, _values, result)
+ result = ">" 
+    result
+end
+
+def _reduce_128(val, _values, result)
+ result = ">=" 
+    result
+end
+
+def _reduce_129(val, _values, result)
+ result = "<=" 
+    result
+end
+
+def _reduce_130(val, _values, result)
+ result = "+" 
+    result
+end
+
+def _reduce_131(val, _values, result)
+ result = "-" 
+    result
+end
+
+def _reduce_132(val, _values, result)
+ result = "||" 
+    result
+end
+
+def _reduce_133(val, _values, result)
+ result = "*" 
+    result
+end
+>>>>>>> onerobotics/master
+
+def _reduce_134(val, _values, result)
+ result = "/" 
+    result
+end
+
+def _reduce_135(val, _values, result)
+ result = "DIV" 
+    result
+end
+
+def _reduce_136(val, _values, result)
+ result = "%" 
+    result
+end
+
+def _reduce_137(val, _values, result)
+ result = "&&" 
+    result
+end
 
 # reduce 138 omitted
 
@@ -1414,6 +2155,7 @@ end
 
 # reduce 140 omitted
 
+<<<<<<< HEAD
 # reduce 141 omitted
 
 # reduce 142 omitted
@@ -1433,20 +2175,35 @@ end
 # reduce 149 omitted
 
 def _reduce_150(val, _values, result)
+=======
+def _reduce_141(val, _values, result)
+>>>>>>> onerobotics/master
  result = IndirectNode.new(val[2].to_sym, val[4]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_151(val, _values, result)
  val[1] = val[1].to_i * -1 if val[0] == "-"; result = DigitNode.new(val[1]) 
     result
 end
 
 def _reduce_152(val, _values, result)
+=======
+def _reduce_142(val, _values, result)
+                                          val[1] = val[1].to_i * -1 if val[0] == "-"
+                                          result = DigitNode.new(val[1])
+                                      
+    result
+end
+
+def _reduce_143(val, _values, result)
+>>>>>>> onerobotics/master
  val[1] = val[1].to_f * -1 if val[0] == "-"; result = RealNode.new(val[1]) 
     result
 end
 
+<<<<<<< HEAD
 # reduce 153 omitted
 
 # reduce 154 omitted
@@ -1454,16 +2211,40 @@ end
 # reduce 155 omitted
 
 def _reduce_156(val, _values, result)
+=======
+def _reduce_144(val, _values, result)
+ result = "-" 
+    result
+end
+
+# reduce 145 omitted
+
+# reduce 146 omitted
+
+def _reduce_147(val, _values, result)
+>>>>>>> onerobotics/master
  result = RealNode.new(val[0]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_157(val, _values, result)
+=======
+def _reduce_148(val, _values, result)
+>>>>>>> onerobotics/master
  result = DigitNode.new(val[0]) 
     result
 end
 
+<<<<<<< HEAD
 # reduce 158 omitted
+=======
+# reduce 149 omitted
+
+# reduce 150 omitted
+
+# reduce 151 omitted
+>>>>>>> onerobotics/master
 
 # reduce 159 omitted
 
@@ -1481,76 +2262,136 @@ end
 
 # reduce 166 omitted
 
+<<<<<<< HEAD
 # reduce 167 omitted
 
 # reduce 168 omitted
 
 def _reduce_169(val, _values, result)
+=======
+def _reduce_160(val, _values, result)
+>>>>>>> onerobotics/master
  result = StringRegisterNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_170(val, _values, result)
+=======
+def _reduce_161(val, _values, result)
+>>>>>>> onerobotics/master
  result = UserAlarmNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_171(val, _values, result)
+=======
+def _reduce_162(val, _values, result)
+>>>>>>> onerobotics/master
  result = TimerNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_172(val, _values, result)
+=======
+def _reduce_163(val, _values, result)
+>>>>>>> onerobotics/master
  result = ArgumentNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_173(val, _values, result)
+=======
+def _reduce_164(val, _values, result)
+>>>>>>> onerobotics/master
  result = VisionRegisterNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_174(val, _values, result)
+=======
+def _reduce_165(val, _values, result)
+>>>>>>> onerobotics/master
  result = PositionNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_175(val, _values, result)
+=======
+def _reduce_166(val, _values, result)
+>>>>>>> onerobotics/master
  result = NumregNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_176(val, _values, result)
+=======
+def _reduce_167(val, _values, result)
+>>>>>>> onerobotics/master
  result = PosregNode.new(val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_177(val, _values, result)
+=======
+def _reduce_168(val, _values, result)
+>>>>>>> onerobotics/master
  result = IONode.new(val[0], val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_178(val, _values, result)
+=======
+def _reduce_169(val, _values, result)
+>>>>>>> onerobotics/master
  result = IONode.new(val[0], val[2].to_i) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_179(val, _values, result)
+=======
+def _reduce_170(val, _values, result)
+>>>>>>> onerobotics/master
  result = CommentNode.new(val[0]) 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_180(val, _values, result)
+=======
+def _reduce_171(val, _values, result)
+>>>>>>> onerobotics/master
  result = TerminatorNode.new 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_181(val, _values, result)
+=======
+def _reduce_172(val, _values, result)
+>>>>>>> onerobotics/master
  result = val[0] 
     result
 end
 
+<<<<<<< HEAD
 def _reduce_182(val, _values, result)
+=======
+# reduce 173 omitted
+
+# reduce 174 omitted
+
+def _reduce_175(val, _values, result)
+>>>>>>> onerobotics/master
  result = TerminatorNode.new 
     result
 end
@@ -1605,7 +2446,14 @@ def _reduce_195(val, _values, result)
     result
 end
 
+<<<<<<< HEAD
 # reduce 196 omitted
+=======
+def _reduce_189(val, _values, result)
+ result = val[0] == "true" 
+    result
+end
+>>>>>>> onerobotics/master
 
 def _reduce_197(val, _values, result)
  result = val[2] 
