@@ -1245,6 +1245,7 @@ end)
   def test_conditional_equals
     parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
     assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
 
   def test_div
     parse %(foo := R[1]\nfoo = 1 DIV 5)
@@ -1276,5 +1277,7 @@ end)
     parse("foo := PR[1]\nTERM := 100\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
     assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
   end
+
 end
+
 

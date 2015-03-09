@@ -138,8 +138,6 @@ module TPPlus
         lit = self.scanIdentifier
         if @ch == '['
           tok = TPPlus::Token.lookup_data(lit)
-        elsif lit == "DIV"
-          tok = :DIV
         elsif lit =~ /g[1-5]/i
           tok = :GROUP
         else
