@@ -138,6 +138,10 @@ module TPPlus
         lit = self.scanIdentifier
         if @ch == '['
           tok = TPPlus::Token.lookup_data(lit)
+        elsif lit == "DIV"
+          tok = :DIV
+        elsif lit =~ /g[1-5]/i
+          tok = :GROUP
         else
           if lit.length > 1
             # keywords are longer than 1 char, avoid lookup otherwise
