@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes
@@ -401,12 +401,12 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "PR[1,1:foo]=5 ;\nPR[1,2:foo]=6 ;\nPR[1,3:foo]=7 ;\nPR[1,4:foo]=8 ;\nPR[1,5:foo]=9 ;\nPR[1,6:foo]=10 ;\n"
   end
 
-  def test_pr_with_invalid_component_raises_error
-    parse("foo := PR[1]\nfoo.bar=5\n")
-    assert_raise(RuntimeError) do
-      assert_prog ""
-    end
-  end
+  #def test_pr_with_invalid_component_raises_error
+  #  parse("foo := PR[1]\nfoo.bar=5\n")
+  #  assert_raise(RuntimeError) do
+  #  assert_prog ""
+  #  end
+  #end
 
   def test_simple_case_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
@@ -935,10 +935,11 @@ end)
 
     assert_prog ""
     assert_equal %(P[1:"test"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };\n), @interpreter.pos_section
   end
 
@@ -994,16 +995,18 @@ end)
 
     assert_prog ""
     assert_equal %(P[1:"test"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };
 P[2:"test2"]{
-   GP1:
-  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
-  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
-  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+GP1:
+      UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+      X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+      W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+
 };\n), @interpreter.pos_section
   end
 
@@ -1176,6 +1179,74 @@ P[2:"test2"]{
     assert_prog "ABORT ;\n"
   end
 
+  def test_position_data_populates_interpreter_position_data
+    parse %(position_data
+{
+  'positions' : [
+    {
+      'id' : 1,
+      'mask' :  [{
+        'group' : 1,
+        'uframe' : 5,
+        'utool' : 2,
+        'config' : {
+            'flip' : false,
+            'up'   : true,
+            'top'  : true,
+            'turn_counts' : [0,0,0]
+            },
+        'components' : {
+            'x' : -.590,
+            'y' : -29.400,
+            'z' : 1304.471,
+            'w' : 78.512,
+            'p' : 89.786,
+            'r' : -11.595
+            }
+        },
+        {
+        'group' : 2,
+        'uframe' : 5,
+        'utool' : 2,
+        'components' : {
+            'J1' : 0.00
+            }
+        }]
+    }
+  ]
+}
+end)
+    assert_prog ""
+    #output = @interpreter.pos_section
+    #output = output
+    assert_equal 1, @interpreter.position_data[:positions].length
+  end
+
+  def test_simple_linear_motion
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_pr_components_groups
+    parse("foo := PR[1]\nfoo.g3.y=5\n")
+    assert_prog "PR[GP3:1,2:foo]=5 ;\n"
+  end
+
+  def test_if_statement_multiple_arguments
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>1 OR R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_div_statement
+    parse("foo := R[1]\nfoo2 := R[2]\nfoo2 = foo DIV 2")
+    assert_prog "R[2:foo2]=R[1:foo] DIV 2 ;\n"
+  end
+
+  def test_conditional_equals
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
   def test_div
     parse %(foo := R[1]\nfoo = 1 DIV 5)
     assert_prog "R[1:foo]=1 DIV 5 ;\n"
@@ -1206,5 +1277,7 @@ P[2:"test2"]{
     parse("foo := PR[1]\nTERM := 100\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
     assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
   end
+
 end
+
 

@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO AT TERM OFFSET SKIP
+token MOVE DOT TO AT TERM OFFSET SKIP GROUP
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -292,7 +292,6 @@ rule
     | var
     | MINUS DIGIT                      {
                                          raise Racc::ParseError, sprintf("\ninvalid termination type: (%s)", val[1]) if val[1] != 1
-
                                          result = DigitNode.new(val[1].to_i * -1)
                                        }
     ;
@@ -345,11 +344,22 @@ rule
     ;
 
   var
-    : WORD                             { result = VarNode.new(val[0]) }
-    | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
-    # introduces 2 reduce/reduce conflicts and 1 useless rule
-    | namespaces var           { result = NamespacedVarNode.new(val[0],val[1]) }
-    ;
+     : WORD                             { result = VarNode.new(val[0]) }
+     | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[1]) }
+     # introduces 2 reduce/reduce conflicts and 1 useless rule
+     | namespaces var           { result = NamespacedVarNode.new(val[0],val[1]) }
+     ;
+
+  var_method_modifiers
+         :
+         | var_method_modifier                          { result = val[0] }
+         | var_method_modifiers var_method_modifier     { result = val[0].merge(val[1]) }
+         ;
+
+  var_method_modifier
+        :  DOT swallow_newlines GROUP     { result = { group: val[2] } }
+         | DOT swallow_newlines WORD                          { result = { method: val[2] } }
+        ;
 
   namespaces
     : WORD COLON COLON                     { result = val }
