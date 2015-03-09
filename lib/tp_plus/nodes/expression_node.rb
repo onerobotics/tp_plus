@@ -53,11 +53,7 @@ module TPPlus
           end
         else
           if @op.boolean? && options[:opposite]
-<<<<<<< HEAD
 	          o = { opposite: true }
-=======
-	    o = { opposite: true }
->>>>>>> onerobotics/master
             "#{@left_op.eval(context,o)}#{@op.eval(context,options)}#{@right_op.eval(context,o)}"
           else
             if options[:opposite] && options[:type] == "if" && @right_op.kind_of?(ExpressionNode)

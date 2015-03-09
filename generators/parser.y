@@ -272,15 +272,9 @@ rule
     ;
 
   motion_statement
-<<<<<<< HEAD
-         : MOVE DOT swallow_newlines TO '(' var ')' motion_modifiers
-                                            { result = MotionNode.new(val[0],val[5],val[7]) }
-         ;
-=======
     : MOVE DOT swallow_newlines TO LPAREN var RPAREN motion_modifiers
                                        { result = MotionNode.new(val[0],val[5],val[7]) }
     ;
->>>>>>> onerobotics/master
 
   motion_modifiers
     : motion_modifier                  { result = val }
@@ -291,7 +285,7 @@ rule
   motion_modifier
     : DOT swallow_newlines AT LPAREN speed RPAREN
                                        { result = SpeedNode.new(val[4]) }
-    | DOT swallow_newlines TERM LPAREN indirectable RPAREN
+    | DOT swallow_newlines TERM LPAREN termination RPAREN
                                        { result = TerminationNode.new(val[4]) }
     | DOT swallow_newlines OFFSET LPAREN var RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
@@ -310,6 +304,11 @@ rule
     : number
     | var
     ;
+
+  termination
+      : signed_number
+      | var
+      ;
 
   time_seg_actions
     : program_call
@@ -349,13 +348,11 @@ rule
     ;
 
   var
-<<<<<<< HEAD
-         : WORD                             { result = VarNode.new(val[0]) }
-         #| WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
-         | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[2]) }
-         # introduces 2 reduce/reduce conflicts and 1 useless rule
-         | namespaces ':' ':' var           { result = NamespacedVarNode.new(val[0],val[3]) }
-         ;
+     : WORD                             { result = VarNode.new(val[0]) }
+     | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[1]) }
+     # introduces 2 reduce/reduce conflicts and 1 useless rule
+     | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
+     ;
 
   var_method_modifiers
          :
@@ -364,16 +361,9 @@ rule
          ;
 
   var_method_modifier
-        : DOT swallow_newlines WORD                   { result = { method: val[2] } }
-        | DOT swallow_newlines GROUP '(' integer ')'   { result = { group: val[4] } }
+        :  DOT swallow_newlines GROUP     { result = { group: val[2] } }
+         | DOT swallow_newlines WORD                          { result = { method: val[2] } }
         ;
-=======
-    : WORD                             { result = VarNode.new(val[0]) }
-    | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
-    # introduces 2 reduce/reduce conflicts and 1 useless rule
-    | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
-    ;
->>>>>>> onerobotics/master
 
   namespaces
     : namespace                        { result = val }
