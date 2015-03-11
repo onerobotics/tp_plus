@@ -117,6 +117,7 @@ module TPPlus
             s << %(\tJ#{$i} = #{joint[1]} deg)
             $i+=1
           end
+          s << %(\n)
         end
       end
 
