@@ -1257,6 +1257,21 @@ end)
     assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
   end
 
+  def test_conditional_equals_minus_one
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == (foo2-1)\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>(R[2:foo2]-1)),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_conditional_equals_minus_and
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo >= (foo2-1) && foo <= (foo2+1) \nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<(R[2:foo2]-1) OR (R[1:foo]>(R[2:foo2]+1)),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_inline_conditional_equals_minus_and
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo >= (foo2-1) && foo <= (foo2+1) \nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]>=(R[2:foo2]-1) AND (R[1:foo]<=(R[2:foo2]+1)),R[2:foo2]=(2) ;\n"
+  end
+
   def test_fine_termination
     parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
     assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
