@@ -1,22 +1,21 @@
 module TPPlus
   module Nodes
-    class ArgumentNode
-      attr_accessor :comment
+    class AddressNode
+      attr_reader :id
       def initialize(id)
         @id = id
-        @comment = comment
       end
 
       def requires_mixed_logic?(context)
-        true
+        false
       end
 
-      def address(context)
-        "#{@id}"
+      def node(context)
+        context.get_var(@id)
       end
 
       def eval(context,options={})
-        "AR[#{@id}]"
+        node(context).address(context)
       end
     end
   end

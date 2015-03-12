@@ -87,13 +87,41 @@ module TPPlus
       return "" if @position_data[:positions].empty?
 
       @position_data[:positions].inject("") do |s,p|
-        s << %(P[#{p[:id]}:"#{p[:comment]}"]{
-   GP#{p[:group]}:
-  UF : #{p[:uframe]}, UT : #{p[:utool]},  CONFIG : '#{p[:config][:flip] ? 'F' : 'N'} #{p[:config][:up] ? 'U' : 'D'} #{p[:config][:top] ? 'T' : 'B'}, #{p[:config][:turn_counts].join(', ')}',
-  X = #{p[:components][:x]} mm, Y = #{p[:components][:y]} mm, Z = #{p[:components][:z]} mm,
-  W = #{p[:components][:w]} deg, P = #{p[:components][:p]} deg, R = #{p[:components][:r]} deg
-};\n)
+        s << %(P[#{p[:id]}:"#{p[:comment]}"]{\n)
+        if p[:mask].is_a?(Array)
+          p[:mask].each do |q|
+            s << pos_return(q)
+          end
+        else
+          s << pos_return(p)
+        end
+
+        s << %(\n};\n)
       end
+    end
+
+    def pos_return(position_hash)
+      s = ""
+      if position_hash[:config].is_a?(Hash)
+        s << %(GP#{position_hash[:group]}:
+      UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]},  CONFIG : '#{position_hash[:config][:flip] ? 'F' : 'N'} #{position_hash[:config][:up] ? 'U' : 'D'} #{position_hash[:config][:top] ? 'T' : 'B'}, #{position_hash[:config][:turn_counts].join(', ')}',
+      X = #{position_hash[:components][:x]} mm, Y = #{position_hash[:components][:y]} mm, Z = #{position_hash[:components][:z]} mm,
+      W = #{position_hash[:components][:w]} deg, P = #{position_hash[:components][:p]} deg, R = #{position_hash[:components][:r]} deg\n)
+      else
+        s << %(GP#{position_hash[:group]}:
+      UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]})
+        $i = 1
+        if position_hash[:components].is_a?(Hash)
+          position_hash[:components].each do |joint|
+            s << %(, \n)
+            s << %(\tJ#{$i} = #{joint[1]} deg)
+            $i+=1
+          end
+          s << %(\n)
+        end
+      end
+
+      return s
     end
 
     def eval

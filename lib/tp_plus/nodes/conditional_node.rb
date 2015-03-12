@@ -43,10 +43,10 @@ module TPPlus
         return InlineConditionalNode.new(@type,@condition,@true_block.first).eval(context) if can_be_inlined?
 
         if @false_block.empty?
-          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
+          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true, type:@type)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
         else
           # could be if-else or unless-else
-          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
+          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true, type:@type)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
         end
       end
     end

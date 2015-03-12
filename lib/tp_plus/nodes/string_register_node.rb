@@ -17,6 +17,10 @@ module TPPlus
         ":#{@comment}"
       end
 
+      def address(context)
+        "#{@id}"
+      end
+
       def eval(context,options={})
         "SR[#{@id}#{comment_string}]"
       end

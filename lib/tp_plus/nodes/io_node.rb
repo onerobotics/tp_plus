@@ -12,6 +12,10 @@ module TPPlus
         ["F","SO","SI","DI"].include?(@type) ? true : false
       end
 
+      def address(context)
+        "#{@id}"
+      end
+
       def result
         "#{@type}[#{@id}:#{@comment}]"
       end
