@@ -12,11 +12,11 @@ module TPPlus
       }
 
       GROUPS = {
-        "g1" => "GP1",
-        "g2" => "GP2",
-        "g3" => "GP3",
-        "g4" => "GP4",
-        "g5" => "GP5"
+        "gp1" => "GP1",
+        "gp2" => "GP2",
+        "gp3" => "GP3",
+        "gp4" => "GP4",
+        "gp5" => "GP5"
       }
 
       attr_accessor :comment

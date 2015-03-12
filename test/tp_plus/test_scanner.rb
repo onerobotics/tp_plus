@@ -566,4 +566,9 @@ class TestScanner < Test::Unit::TestCase
     assert_token :ADDRESS, "foo"
   end
 
+  def test_groups
+    @scanner.scan_setup "gp3"
+    assert_token :GROUP, "gp3"
+  end
+
 end

@@ -1228,8 +1228,8 @@ end)
   end
 
   def test_pr_components_groups
-    parse("foo := PR[1]\nfoo.g3.y=5\n")
-    assert_prog "PR[GP3:1,2:foo]=5 ;\n"
+    parse("foo := PR[1]\nfoo2 := R[1]\nfoo.gp3.y=(5*foo2)\n")
+    assert_prog "PR[GP3:1,2:foo]=5*foo2 ;\n"
   end
 
   def test_if_statement_multiple_arguments
