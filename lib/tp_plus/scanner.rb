@@ -138,7 +138,7 @@ module TPPlus
         lit = self.scanIdentifier
         if @ch == '['
           tok = TPPlus::Token.lookup_data(lit)
-        elsif lit =~ /g[1-5]/i
+        elsif lit =~ /gp[1-5]/i
           tok = :GROUP
         else
           if lit.length > 1
