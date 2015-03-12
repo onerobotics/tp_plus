@@ -1293,6 +1293,21 @@ end)
     assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
   end
 
+  def test_Addres_Op
+    parse("foo := PR[100]\n &foo\n")
+    assert_prog "100 ;\n"
+  end
+
+  def test_Addres_Flag
+    parse("foo := F[3]\n &foo\n")
+    assert_prog "3 ;\n"
+  end
+
+  def test_Address_in_Function
+    parse("foo := R[1]\n foo2 := R[5]\n foo3 := R[10]\n Func(&foo, &foo2, &foo3)\n")
+    assert_prog "CALL FUNC(1,5,10) ;\n"
+  end
+
 end
 
 

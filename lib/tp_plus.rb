@@ -4,6 +4,7 @@ end
 require_relative 'tp_plus/nodes/abort_node'
 require_relative 'tp_plus/nodes/argument_node'
 require_relative 'tp_plus/nodes/assignment_node'
+require_relative 'tp_plus/nodes/address_node'
 require_relative 'tp_plus/nodes/call_node'
 require_relative 'tp_plus/nodes/case_node'
 require_relative 'tp_plus/nodes/case_condition_node'

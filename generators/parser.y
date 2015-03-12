@@ -64,6 +64,7 @@ rule
     #| jump
     #| io_method
     | label_definition
+    | address
     | conditional
     | inline_conditional
     | forloop
@@ -162,6 +163,7 @@ rule
     : number
     | var
     | string
+    | address
     ;
 
   string
@@ -481,6 +483,10 @@ rule
 
   input
     : INPUT LBRACK DIGIT RBRACK              { result = IONode.new(val[0], val[2].to_i) }
+    ;
+
+  address
+    : ADDRESS                            { result = AddressNode.new(val[0]) }
     ;
 
   comment

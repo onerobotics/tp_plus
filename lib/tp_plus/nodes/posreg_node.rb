@@ -54,6 +54,10 @@ module TPPlus
         false
       end
 
+      def address(context)
+        "#{@id}"
+      end
+
       def eval(context,options={})
         options[:method] ||= ""
         options[:group] ||= ""

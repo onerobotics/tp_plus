@@ -565,4 +565,5 @@ class TestScanner < Test::Unit::TestCase
     @scanner.scan_setup "&foo"
     assert_token :ADDRESS, "foo"
   end
+
 end

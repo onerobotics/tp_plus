@@ -7,6 +7,10 @@ module TPPlus
         @comment = ""
       end
 
+      def address(context)
+        "#{@id}"
+      end
+
       def eval(context, options={})
         "TIMER[#{@id}]" # FANUC does not like timer comments
       end
