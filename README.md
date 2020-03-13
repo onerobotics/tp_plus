@@ -1,3 +1,7 @@
+# Project Status
+
+This repository is no longer maintained. For continued updates, please see [https://github.com/kobbled/tp_plus](https://github.com/kobbled/tp_plus).
+
 TP+
 ===
 
